@@ -1,0 +1,109 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using MvcContrib.Pagination
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@model IEnumerable<Iauq.Core.Domain.Comment>
+
+@{
+    ViewBag.Title = "پنل مدیریت - نظرات";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("نظرات", "List", "Comments", new {page = 1}, null));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr/>
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Owner)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Parent)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Commentor)
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Comment comment in Model)
+                {
+                    <tr>
+                        <td>
+                            @comment.Title.EnsureLength(40)
+                        </td>
+                        <td>
+                            @Html.ActionLink(comment.Owner.Title.EnsureLength(30), "Edit", "Contents", new {comment.Owner.Id}, null)
+                        </td>
+                        <td>
+                            @if (comment.Parent != null)
+                            {
+                                @Html.ActionLink(comment.Parent.Title.EnsureLength(30), "Edit", new {comment.Parent.Id})
+                            }
+                            else
+                            {
+                                <text>هیچکدام</text>
+                            }
+                        </td>
+                        <td>
+                            @if (comment.CommentorId.HasValue)
+                            {
+                                @Html.ActionLink(comment.Commentor.UserName.EnsureLength(20), "Edit", "Users", new {comment.Commentor.Id}, null)
+                            }
+                            else
+                            {
+                                @(comment.CommentorIp ?? "نامعلوم")
+                            }
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("ویرایش", "Edit", new {comment.Id}, new {@class = "btn"})
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new {comment.Id}), new Dictionary<string, object> {{"class", "btn btn-danger"}, {"data-toggle", "modal"}, {"data-target", "#delete-modal"}, {"data-delete-handle", "true"}})
+                            @Html.ActionLink(comment.IsApproved ? "عدم تائید" : "تائید", "ChangeApproval", new {comment.Id}, new {@class = "btn"})
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.Partial("_DeleteConfirmationModal")
+            if (ViewBag.OwnerId != null)
+            {
+                @Html.RenderPager(Model as IPagination, page => Url.Action("List", new {page, ViewBag.OwnerId}))
+            }
+            else
+            {
+                @Html.RenderPager(Model as IPagination, page => Url.Action("List", new {page}))
+            }
+        }
+        <div class="clearfix"></div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

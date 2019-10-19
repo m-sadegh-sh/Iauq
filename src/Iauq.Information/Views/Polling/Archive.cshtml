@@ -1,0 +1,21 @@
+﻿@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@using MvcContrib.Pagination
+@model  MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Poll>
+@{
+    Layout = "~/Views/Shared/_LayoutWithSideBar.cshtml";
+    ViewBag.Title = "خانه - آرشیو نظرسنجی‌ها";
+    ViewBag.Keywords = "آرشیو، نظرسنجی‌ها، نظرسنجی، آخرین نظرسنجی‌ها، اخرین نظرسنجی‌ها، نظرسنجی‌های دانشگاه";
+    ViewBag.Description = "آرشیو نظرسنجی‌های دانشگاه آزاد اسلامی، واحد قوچان";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("آرشیو نظرسنجی‌ها", "Archive", "Polling", new {page = 1}, null));
+}
+<div class="rounded-box newest">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr>
+        @{ Html.RenderPartial("_Poll", Model); }
+        @Html.RenderPager(Model as IPagination, page => Url.Action("Archive", new { page }))
+    </div>
+</div>

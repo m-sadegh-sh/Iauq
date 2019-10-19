@@ -1,0 +1,58 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@model List<Iauq.Core.Domain.Content>
+<nav>
+    <ul>
+        @foreach (Content page in Model)
+        {
+            <li>
+                <div>
+                    @if (page.Type == ContentType.Link)
+                    {
+                        <a href="@page.Body.Trim()">
+                            <h3>@page.Title.EnsureLength(40)</h3><span>@page.Metadata.SeoDescription</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Details", "Pages", new {id = page.Id, slug = page.Metadata.SeoSlug})">
+                            <h3>@page.Title.EnsureLength(40)</h3><span>@page.Metadata.SeoDescription</span>
+                        </a>
+                    }
+                </div>
+                <ul>
+                    <li>
+                        <div class="links"> 
+                            <div class="links-inner"> 
+                                <ul>
+                                    @foreach (Content subpage in page.Childs)
+                                    {
+                                        <li>
+                                            @if (page.Type == ContentType.Link)
+                                            {
+                                                <a href="@subpage.Body.Trim()">@subpage.Title.EnsureLength(40)</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(subpage.Title.EnsureLength(40), "Details", "Pages", new {id = subpage.Id, slug = subpage.Metadata.SeoSlug}, null)
+                                            }
+                                        </li>
+                                    }
+                                    <div class="clearfix"></div>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="description">
+                            <div class="description-inner">
+                                <h1 class="topic-list">
+                                    @page.Title
+                                </h1>
+                                @Html.Raw(page.Abstract)
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        }
+    </ul>
+</nav>

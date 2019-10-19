@@ -1,0 +1,113 @@
+﻿@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Information.Areas.Administration.Models.FileManager
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@model Iauq.Information.Areas.Administration.Models.FileManager.FileManagerModel
+@{
+    ViewBag.Title = "پنل مدیریت - مدیریت فایل‌ها";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("مدیریت فایل‌ها", "List", "FileManager", new { currentUrl=Constants.CdnUrl }, null));
+
+    var currentEntry = new EntryModel(new EntryModel(Model.CurrentEntry.CurrentUrl, true, true).CurrentUrl, true, true);
+    var directories = new List<MvcHtmlString>();
+
+    while (currentEntry.CurrentUrl != null)
+    {
+        directories.Add(@Html.ActionLink(FileManagerModel.ExtractName(currentEntry.CurrentUrl), "List", new {currentEntry.CurrentUrl}));
+
+        currentEntry = new EntryModel(currentEntry.ParentUrl, true, true);
+    }
+
+    directories.Reverse();
+
+    foreach (MvcHtmlString dir in directories)
+    {
+        PagePartManager.Current.AddBreadcrumb(dir);
+    }
+}
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <div class="btn-toolbar ignore-heading pull-left">
+            <div class="btn-group">
+                @if (!string.IsNullOrEmpty(Model.CurrentEntry.ParentUrl) && Model.CurrentEntry.ParentUrl != Model.CurrentEntry.CurrentUrl)
+                {
+                    @Html.ActionLink("تغییر نام", "Rename", new {targetUrl = Model.CurrentEntry.CurrentUrl}, new {@class = "btn"})
+                    @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new {targetUrl = Model.CurrentEntry.CurrentUrl}), new Dictionary<string, object> {{"class", "btn btn-danger"}, {"data-toggle", "modal"}, {"data-target", "#delete-modal"}, {"data-delete-handle", "true"}})
+                    @Html.ActionLink("برگشت", "List", new {currentUrl = Model.CurrentEntry.ParentUrl}, new {@class = "btn"})
+                }
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">... <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>@Html.ActionLink("ایجاد پوشه", "CreateDirectory", new {targetUrl = Model.CurrentEntry.CurrentUrl})</li>
+                    <li>@Html.ActionLink("ارسال فایل", "UploadFile", new {targetUrl = Model.CurrentEntry.CurrentUrl})</li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+            <hr/>
+        }
+        @if (!Model.Entries.Any())
+        {
+            <p class="center">@ValidationResources.NoDirectoryOrFiles</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Entries)
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (EntryModel entry in Model.Entries.OrderByDescending(e => e.IsDirectory).ThenBy(e => e.CurrentUrl))
+                {
+                    <tr>
+                        <td class="align-left">
+                            <h3>
+                                @if (entry.IsDirectory)
+                                {
+                                    @Html.ActionLink(FileManagerModel.ExtractName(entry.CurrentUrl), "List", new {entry.CurrentUrl}, new {@class = "pull-right"})
+                                }
+                                else
+                                {
+                                    <a href="@entry.CurrentUrl" class="pull-right" target="_blank">@FileManagerModel.ExtractName(entry.CurrentUrl)</a>
+                                }
+                                <span>
+                                    @Html.DisplayNameFor(c => c.CurrentEntry.CreationTime): @entry.CreationTime.ToPersianDate()
+                                </span>
+                            </h3>
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("تغییر نام", "Rename", new {targetUrl = entry.CurrentUrl}, new {@class = "btn"})
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new {targetUrl = entry.CurrentUrl}), new Dictionary<string, object> {{"class", "btn btn-danger"}, {"data-toggle", "modal"}, {"data-target", "#delete-modal"}, {"data-delete-handle", "true"}})
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        @Html.Partial("_DeleteConfirmationModalForDirectoryOrFile")
+        <div class="clearfix">
+        </div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@using Iauq.Information.Helpers
+@model Iauq.Core.Domain.Carousel
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(c => c.DisplayOrder, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(c => c.DisplayOrder, new {@class = "input-mini"})
+        @Html.ValidationMessageFor(c => c.DisplayOrder, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => c.Title, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(c => c.Title, new {@class = "input-xlarge"})
+        @Html.ValidationMessageFor(c => c.Title, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => c.Description, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextAreaFor(c => c.Description, 3, 50, new {@class = "input-xlarge"})
+        @Html.ValidationMessageFor(c => c.Description, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => c.LinkUrl, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(c => c.LinkUrl, new { @class = "input-xxlarge align-left" })
+        @Html.ValidationMessageFor(c => c.LinkUrl, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => c.Slide, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(c => c.Slide, new {type = "file", @class = "input-xlarge"})
+        @Html.ValidationMessageFor(c => c.Slide, null, new {@class = "help-inline"})
+    </div>
+</div>
+@if(File.Exists(Server.MapPath(UrlResolver.Carousel(Model.Id.ToString()))))
+{
+    <img src="@UrlResolver.Carousel(Model.Id.ToString())"/>
+}

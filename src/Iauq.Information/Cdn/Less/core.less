@@ -1,0 +1,322 @@
+@font-face {
+    font-family: 'Farnaz';
+    .cdnFont('BFarnaz');
+}
+@font-face {
+    font-family: 'Homa';
+    .cdnFont('BHoma');
+}
+@font-face {
+    font-family: 'Yekan';
+    .cdnFont('BYekan');
+}
+@font-face {
+    font-family: 'Nazanin';
+    .cdnFont('BNazanin');
+}
+@font-face {
+    font-family: 'Mitra';
+    .cdnFont('BMitra');
+}
+
+html  
+{
+    height: 100%;
+    .cdnTemplate('header-repeat.jpg', repeat-x left -10px);
+    background-color: #f2f6f5;
+
+#dummy
+{
+	opacity:0;
+	z-index:-1;
+	margin:0;
+	padding:0;
+    border: none;
+    visibility: hidden;
+}
+
+.selection (@selectionColor);
+}
+
+.code {
+    font-family: tahoma;
+    font-size: 14px;
+    line-height: 26px;
+}
+.stack {
+    max-height: 500px;
+}
+.stack-content {
+    overflow: auto;
+    background-color: #ffffcc;
+    padding: 10px;
+}
+
+body 
+{
+    height: 100%;
+    .cdnTemplate('header.jpg', no-repeat left -10px);
+    direction: rtl;
+    min-width: 240px;
+}
+
+body > div { padding: 0 @baseLineHeight; }
+
+.wrapper {
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -3.5em;
+	max-width:1100px;
+}
+
+.no-right-margin { margin-right: 0; }
+
+.no-left-margin { margin-left: 0; }
+
+.inline-block {
+    display: inline-block;
+}
+.text h2, .text h3, .text h4, .text h5, .text h6, .text ul, .text p {
+    font-family: tahoma !important;
+}
+.box-footer
+{
+    display: block;
+    margin-top: @baseLineHeight/4;
+    *margin-top: @baseLineHeight/8;
+    background-color: @grayLighter;
+    text-align: left;
+    padding: @baseLineHeight/4;
+    *width: 98%;
+}
+.box-footer.single a.btn
+{
+    margin: 0;
+}
+p.center
+{
+    margin: 0 @baseLineHeight 0 @baseLineHeight;
+    text-align: center;
+}
+.rounded-box .inside
+{
+	border: solid 1px @grayLighter;
+    border-top: none;
+    padding: @baseLineHeight/4;
+    position: relative;
+	.border-radius (0 0 5px 5px);
+	.box-shadow(0 1px 0 @grayLight);
+    background-color: #fff;
+}
+.tabs-right > .rounded-box > .tab-content
+{
+    height: 276px;
+}
+.tabs-right > .rounded-box > .tab-content > .tab-pane
+{
+    min-height: 250px;
+}
+.inside form
+{
+    padding-top: @baseLineHeight/2;
+}
+.tabs-right form, .tabs-right .form-actions
+{
+    margin-bottom: 16px !important;
+}
+.inside form, .inside .form-actions
+{
+    margin-bottom: 0;
+}
+.validation-summary-errors
+{
+    padding: @baseLineHeight/2;
+    background-color: #FDD;
+    margin-bottom: @baseLineHeight;
+}
+.validation-summary-errors ul
+{
+color: #FF4949;
+    margin-bottom: 0;
+}
+.field-validation-error
+{
+color: #FF4949;
+}
+.align-left
+{
+    text-align: left;
+    direction: ltr;
+}
+.align-right
+{
+    text-align: right;
+    direction: rtl;
+}
+fieldset hr
+{
+    margin: 27px 0;
+}
+.narrow {
+    width: 50%;
+    margin: 20px auto 0 auto;
+}
+table td.btn-group {
+    min-width: 175px;
+    *width: 175px !important; 
+}
+.push {
+    height: 3.5em;
+}
+.form-search {
+    padding-top: @baseLineHeight !important;
+}
+.nav-title {
+    padding: @baseLineHeight/2;
+    text-align: center;
+    font-size: 13px;
+    background-color: #DADADA;
+    margin: -19px 0 5px 0;
+	border-radius: 0 0 4px 4px;
+}
+.visual-links .nav-title {
+    margin-bottom: 10px;
+}
+.ignore-heading {
+    margin-top: -30px;
+    *margin-top: -8px;
+    margin-left: 9px;
+}
+.poll-item 
+{
+    margin-top: 0;
+    display: block;
+    margin-left: -20px !important;
+    margin-right: -20px !important;
+}
+.poll-item p, .poll-last-item {
+    margin-bottom: 0;
+}
+.poll-buttons 
+{
+    text-align: left;
+    display: block;
+    margin: 10px -25px -27px -25px !important;
+}
+.poll-buttons > a {
+    display: inline-block !important;
+}
+.ckeditor {
+    direction: ltr!important;
+    min-height: 300px;
+}
+.wrong-credentials {
+    color: @warningText;
+    background-color: @warningBackground !important;
+}
+.login {
+    color: @infoText;
+    background-color: @infoBackground !important;
+}
+.change-password {
+    color: @successText;
+    background-color: @successBackground !important;
+}
+.logout {
+    color: @infoText;
+    background-color: @infoBackground !important;
+}
+.create {
+    color: @successText;
+    background-color: @successBackground !important;
+}
+.update {
+    color: @successText;
+    background-color: @successBackground !important;
+}
+.delete {
+    color: @warningText;
+    background-color: @warningBackground !important;
+}
+.exception {
+    color: @errorText;
+    background-color: @errorBackground !important;
+}
+.commanding-label {
+    cursor: pointer; 
+    float: left; 
+    left: 8px; 
+    position: relative;
+    margin-top: -24px;
+}
+.polls-container ul.items{
+    margin: 0;
+}
+.polls-container ul.items li{
+    list-style: none;
+}
+.polls-container .poll-buttons {
+    margin: 20px 25px 0 25px !important;
+}
+.polls-container .poll-item 
+{
+    display: block;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+}
+hr.poll-line {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.inside {
+    position: static !important;    
+}
+.row-fluid, .rounded-box {
+    *height: auto !important;    
+}
+.tree-menu i {
+    margin-top: 4px;
+}
+.toggle-tree-menu {
+  cursor: pointer;
+}
+.more {
+  display: block;
+  padding: 3px 15px;
+  text-align: center;
+  margin-top: @baseLineHeight;
+}
+.more:hover {
+  text-decoration: none;
+  background-color: #EEE;
+  cursor: pointer;
+}
+.well .divider {
+    background-color: transparent;
+    border-bottom: none;
+    margin-bottom: 0;
+}
+.row-fluid.calendar-block > .highlights.span6 {
+    width:100% !important;
+    margin-right:0;
+    float:none;
+    display:block;
+}
+.row-fluid.calendar-block > .visible-small-phone {
+    display:none !important;
+}
+table td {
+    word-wrap: break-all;
+}
+ul.root li.separated {
+    margin-right: 20px;
+}
+ul.root li.dif {
+    background-color: #D8D8D8;
+}
+ul.root li.dif:hover {
+    background-color: inherit;
+}
+ul.root > span.date-time {
+    
+}

@@ -1,0 +1,22 @@
+﻿
+@using Iauq.Information.Helpers
+@using MvcContrib.Pagination
+@using Iauq.Web.Mvc.UI
+@model MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+@{
+    Layout = "~/Views/Shared/_LayoutWithSideBar.cshtml";
+    ViewBag.Title = "خانه - آرشیو اخبار";
+    ViewBag.Keywords = "آرشیو، اخبار، آخرین اخبار، اخرین اخبار، اخبار دانشگاه";
+    ViewBag.Description = "آرشیو اخبار دانشگاه آزاد اسلامی، واحد قوچان";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("آرشیو اخبار", "Archive", "News",new{page=1},null));
+}
+<div class="rounded-box newest row-fluid">
+    <div class="inside text">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr />
+        @{ Html.RenderPartial("_NewsAbstractModel", Model); }
+        @Html.RenderPager(Model as IPagination, page => Url.Action("Archive", new { page }))
+    </div>
+</div>

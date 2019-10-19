@@ -1,0 +1,78 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.Helpers
+@using MvcContrib.Pagination
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Web.Mvc.UI
+@model IEnumerable<Iauq.Core.Domain.Carousel>
+
+@{
+    ViewBag.Title = "پنل مدیریت - اسلاید‌ها";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("اسلاید‌ها", "List", "Carousels", new { page = 1 }, null));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+            <div class="btn-group pull-left">
+                @Html.ActionLink("ثبت اسلاید جدید", "Create", null, new { @class = "btn btn-success" })
+            </div>
+        </h1>
+        <hr/>
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.DisplayOrder)
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Carousel carousel in Model)
+                {
+                    <tr>
+                        <td>
+                            @carousel.Title.EnsureLength(50)
+                        </td>
+                        <td>
+                            @carousel.DisplayOrder
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("ویرایش", "Edit", new {carousel.Id}, new {@class = "btn"})
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new { carousel.Id }), new Dictionary<string, object> { { "class", "btn btn-danger" }, { "data-toggle", "modal" }, { "data-target", "#delete-modal" }, { "data-delete-handle", "true" } })
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.Partial("_DeleteConfirmationModal")
+            @Html.RenderPager(Model as IPagination, page => Url.Action("List", new { page }))
+        }
+        <div class="clearfix"></div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

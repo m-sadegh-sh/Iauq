@@ -1,0 +1,73 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@model IEnumerable<Iauq.Core.Domain.Content>
+
+@{
+    bool isHome = TempData["IsHome"] != null;
+}
+
+<div id="footer"@(isHome ? Html.Raw(" class=\"home-footer\"") : null)>
+    <div class="fluid-container row-fluid">
+        @if (ViewBag.Pages != null && ViewBag.Pages.Count > 0)
+        {
+            <div class='@(isHome ? "" : "span3")'>
+                <h2 class='hidden-small-phone@(isHome ? " hide" : "")'>صفحات اصلی</h2>
+                <ul>
+                    @foreach (Content page in (IEnumerable<Content>) ViewBag.Pages)
+                    {
+                        <li>
+                            @Html.PageLink(page)
+                        </li>
+                    }
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        }
+        @if (!isHome && ViewBag.LatestNews != null && ViewBag.LatestNews.Count > 0)
+        {
+            <div class="span3 separator hidden-small-phone">
+                <h2>آخرین اخبار</h2>
+                <ul>
+                    @foreach (Content news in (IEnumerable<Content>) ViewBag.LatestNews)
+                    {
+                        <li>@Html.NewsTitle(news)</li>
+                    }
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        }
+        <div class="clearfix hidden-desktop hidden-phone"></div>
+        @if (!isHome && ViewBag.LatestEvents != null && ViewBag.LatestEvents.Count > 0)
+        {
+            <div class="span3 separator third hidden-small-phone">
+                <h2>آخرین رخدادها</h2>
+                <ul>
+                    @foreach (Content @event in (IEnumerable<Content>) ViewBag.LatestEvents)
+                    {
+                        <li>@Html.EventTitle(@event)</li>
+                    }
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        }
+        @if (!isHome && ViewBag.LatestCalendars != null && ViewBag.LatestCalendars.Count > 0)
+        {
+            <div class="span3 separator hidden-small-phone">
+                <h2>تقویم آموزشی</h2>
+                <ul>
+                    @foreach (Content calendar in (IEnumerable<Content>) ViewBag.LatestCalendars)
+                    {
+                        <li>@Html.CalendarTitle(calendar)</li>
+                    }
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        }
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+    <p class="copyright">
+        @Html.RouteLink("نقشه سایت", "Sitemap") - مركز فناوری اطلاعات و ارتباطات دانشگاه آزاد اسلامي واحد قوچان / IAUQ ICT Center
+    </p>
+    <div class="clearfix hide-if-ie7"></div>
+</div>

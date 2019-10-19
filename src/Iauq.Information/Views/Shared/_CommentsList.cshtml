@@ -1,0 +1,102 @@
+﻿@using FarsiLibrary.Utils
+@using Iauq.Core.Domain
+@using Iauq.Core.Utilities
+@using Iauq.Information.App_GlobalResources
+@using StructureMap
+@model IEnumerable<Iauq.Core.Domain.Comment>
+<div class="rounded-box newest row-fluid">
+    <div class="inside text">
+        <h1>
+            نظرات
+        </h1>
+        <hr/>
+        @{
+            List<Comment> comments;
+
+            var webHelper = ObjectFactory.GetInstance<IWebHelper>();
+
+            bool isAuthenticated = User.Identity.IsAuthenticated;
+            bool isAdmin = false;
+
+            if (isAuthenticated)
+            {
+                isAdmin = webHelper.IsInRole(User.Identity.Name, "Administrators");
+                if (isAdmin)
+                {
+                    comments = Model.ToList();
+                }
+                else
+                {
+                    comments = Model.Where(c => c.Commentor.UserName == User.Identity.Name).ToList();
+                }
+            }
+            else
+            {
+                comments = Model.Where(c => c.IsApproved).ToList();
+            }
+
+            bool hasComment = comments.Any();
+        }
+        @if (!hasComment)
+        {
+            <p class="center">@ValidationResources.NoComments</p>
+        }
+        else
+        {
+            foreach (Comment comment in comments)
+            {
+                <div>
+                    @{
+                        bool hasPos = comment.PositiveRates > 0;
+                        bool hasNag = comment.NagetiveRates > 0;
+                        bool hasRates = hasPos || hasNag;
+                    }
+                    <h3>@comment.Title
+                        <span>@(new PersianDate(comment.CommentDate).ToWritten())
+                            @if (hasRates)
+                            {
+                                <text> / (</text>
+                                @(hasPos ? "+" + comment.PositiveRates : "")
+
+                                @(hasNag ? (hasPos ? ", " : "") + "-" + comment.NagetiveRates : "")
+                                <text>)</text>
+                            }
+                            @if (comment.Commentor != null)
+                            {
+                                <text> توسط @comment.Commentor.UserName</text>
+                            }
+                        </span>
+                        @if (isAdmin)
+                        {
+                            <div class="btn-group pull-left">
+                                <a href="@Url.Action("ChangeApproval", "Comments", new {Area = "Administration", comment.Id})" class='btn @(comment.IsApproved ? "btn-info" : "btn-danger")'>
+                                    <i class='icon-white @(comment.IsApproved ? "icon-ok" : "icon-remove")'></i>
+                                </a>
+                                <a href="@Url.RouteUrl("AdministrationEdit", new {Controller = "Comments", comment.Id})" class="btn btn-info">
+                                    <i class="icon-edit icon-white"></i>
+                                </a>
+                            </div>
+                        }
+                        else if (isAuthenticated && !comment.IsApproved)
+                        {
+                            <div class="label label-warning pull-left">
+                                نظر شما هنوز تایید نشده است.
+                            </div>
+                        }
+                    </h3>
+                    <p class="text">@comment.Body</p>
+                    <div class="clearfix"></div>
+                    <div class="box-footer single">
+                        <b>امتیاز دهید:</b>
+                        <a href="@Url.Action("PositiveRate", "Home", new {comment.Id, returnTo = Request.RawUrl})">
+                            <i class="icon-edit icon-thumbs-up"></i>
+                        </a>
+                        <a href="@Url.Action("NagativeRate", "Home", new {comment.Id, returnTo = Request.RawUrl})">
+                            <i class="icon-edit icon-thumbs-down"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

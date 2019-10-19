@@ -1,0 +1,29 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Core.Domain.Comment
+
+@{
+    ViewBag.Title = string.Format("پنل مدیریت - نظرات - ویرایش نظر: {0}", Model.Title);
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("نظرات", "List", "Comments", new { page = 1 }, null));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink(string.Format("ویرایش نظر: {0}", Model.Title), "Edit", "Comments", new {Model.Id}));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr />
+        @using (Html.BeginForm("Edit", "Comments", new {Model.Id}, FormMethod.Post, new {@class = "form-horizontal"}))
+        {
+            <input type="hidden" name="id" value="@Model.Id" />
+            @Html.ValidationSummary(true)
+            <fieldset>
+                @{ Html.RenderPartial("_Update", Model); }
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">بروز رسانی</button>
+                    @Html.ActionLink("برگشت", "List", new{page=1}, new {@class = "btn"})
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>

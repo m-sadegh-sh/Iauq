@@ -1,0 +1,50 @@
+.top-tab  
+{
+    padding: 0 0 @elementsSpace 0;
+    text-align:center;
+    *height: 33px
+}
+
+.top-tab ul { 
+    margin: 0;
+    display: inline-block;
+}
+
+.top-tab ul li {
+    list-style-type: none;
+    margin-left: @baseLineHeight/4;
+    float: right;
+    margin-top: 0;
+}
+.top-tab ul li.flat {
+    margin-top: 5px;
+}
+.top-tab ul li.last-child {
+    margin-left: 0;
+}
+.top-tab ul .divider-vertical {
+  height: @baseLineHeight;
+  width: 1px;
+  overflow: hidden;
+  background-color: @grayLighter;
+  border-right: 1px solid @white;
+}
+.top-tab .breadcrumb {
+    border-top: none;
+    padding: 4px;
+	.border-radius(0, 0, 3px, 3px);
+}
+.middle-bar
+{
+    padding-top: 30px;
+    display: block;
+    margin: 0 @elementsSpace 0 @elementsSpace;	
+}
+.middle-bar a
+{
+    .size(58px, 250px);
+}
+.middle-bar input
+{
+    display: block;		
+}

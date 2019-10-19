@@ -1,0 +1,59 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@model  MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+@if (!Model.Any())
+{
+    <p class="center">@ValidationResources.NoRecords</p>
+}
+else
+{
+    if (ViewContext.IsChildAction)
+    {
+        <text>
+            <marquee behavior="" direction="up" scrollamount="1" scrolldelay="30" onmouseover=" this.stop() "
+                     onmouseout=" this.start() " height="238">
+        </text>
+    }
+    <div class="rows-items">
+        @foreach (Content newsAbstractModel in Model)
+        {
+            <div class="row-item">
+                <h3>@Html.NewsTitle(newsAbstractModel)
+                    @if (newsAbstractModel.IsHot)
+                    {
+                        <span class="badge badge-important">مهم</span>
+                    }
+                    <br />
+                    <span>@(newsAbstractModel.Category != null ? newsAbstractModel.Category.Title + " /" : "")
+                        @newsAbstractModel.PublishDate.ToPersianDate().ToWritten() /
+                        @if (string.IsNullOrWhiteSpace(newsAbstractModel.Tags))
+                        {
+                            <text>این مطلب برچسبی ندارد!</text>
+                        }
+                        else
+                        {
+                            <b>برچسب ها:</b>
+                            @Html.RenderTags(newsAbstractModel.Tags, "")
+                        }
+                        /
+                        @if (newsAbstractModel.PageViews == 0)
+                        {
+                            <text>بدون بازدید!</text>
+                        }
+                        else
+                        {
+                            <b>تعداد بازدید:</b>
+                            @newsAbstractModel.PageViews
+                        }
+                    </span>
+                </h3>
+            </div>
+        }
+    </div>
+    if (ViewContext.IsChildAction)
+     {
+         @:</marquee>
+     }
+}

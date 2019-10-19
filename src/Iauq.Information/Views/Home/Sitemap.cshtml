@@ -1,0 +1,52 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@model IEnumerable<Iauq.Core.Domain.Content>
+@{
+    ViewBag.Title = "نقشه سایت";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink((string) ViewBag.Title, "Sitemap", "Home"));
+}
+@helper Recursive(Content content)
+{
+    <ul class="nav nav-list">
+        @foreach (Content child in content.Childs.OrderBy(c => c.DisplayOrder))
+        {
+            bool hasChild = child.Childs.Count > 0;
+            <li>
+                @if (hasChild)
+                {
+                    <text><i class="toggle-tree-menu pull-right icon-minus-sign"></i></text>
+                }
+                @Html.TopicLink(child)
+                @if (hasChild)
+                {
+                    @Recursive(child)
+                }
+            </li>
+        }
+    </ul>
+}
+<div class="well visual-links">
+    <ul class="nav nav-list">
+        <li class="nav-title">
+            <i class="icon-indent-right"></i>
+            @ViewBag.Title 
+        </li>
+        <li class="tree-menu">
+            @foreach (Content content in Model)
+            {
+                bool hasChild = content.Childs.Count > 0;
+                if (hasChild)
+                {
+                    <text><i class="toggle-tree-menu pull-right icon-minus-sign"></i></text>
+                }
+                @Html.TopicLink(content)
+                if (hasChild)
+                {
+                    @Recursive(content)
+                }
+            }
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,23 @@
+﻿@model Iauq.Core.Domain.Choice
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(c => Model.Title, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(c => Model.Title, new {@class = "input-xlarge"})
+        @Html.ValidationMessageFor(c => Model.Title, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => Model.Description, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextAreaFor(c => Model.Description, 3, 5, new {@class = "input-xxlarge"})
+        @Html.ValidationMessageFor(c => Model.Description, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => Model.IsMultiSelection, new {@class = "control-label"})
+    <div class="controls">
+        @Html.CheckBoxFor(c => Model.IsMultiSelection, new {@class = "input-xlarge"})
+    </div>
+</div>

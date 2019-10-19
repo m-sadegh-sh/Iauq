@@ -1,0 +1,141 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@model Iauq.Core.Domain.Poll
+@{
+    Layout = "~/Views/Shared/_LayoutWithSideBar.cshtml";
+    ViewBag.Title = Model.Title;
+    ViewBag.Description = Model.Description;
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("آرشیو نظرسنجی‌ها", "Archive", "Polling", new {page = 1}, null));
+    PagePartManager.Current.AddBreadcrumb(Html.PollLink(Model, (string) ViewBag.Title));
+}
+<div class="rounded-box newest">
+    <div class="inside text polls-container">
+        <h1>@ViewBag.Title
+            @if (Request.IsAuthenticated)
+            {
+                <div class="btn-group pull-left">
+                    <a href="@Url.RouteUrl("AdministrationEdit", new {Controller = "Polls", Model.Id})" class="btn btn-info">
+                        <i class="icon-edit icon-white"></i>
+                    </a>
+                </div>
+            }
+        </h1>
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <text><hr></text>
+            @Html.Raw(Model.Description)
+        }
+        @if (!ViewBag.IsAlreadyVoted)
+        {
+            using (Html.BeginForm("Details", "Polling", new {Model.Id}, FormMethod.Post, new {@class = "form-horizontal"}))
+            {
+                foreach (Choice choice in Model.Choices)
+                {
+                    if (Model.Choices.Count > 1)
+                    {
+                        <h3>@choice.Title</h3>
+                        if (!string.IsNullOrEmpty(choice.Description))
+                        {
+                            @Html.Raw(choice.Description)
+                        }
+                    }
+                    foreach (ChoiceItem item in choice.Items)
+                    {
+                        <li class="btn-toolbar tags-container poll-item">
+                            @if (choice.IsMultiSelection)
+                            {
+                                <label class="checkbox">
+                                    <input type="checkbox" name="choiceItemIds" value="@item.Id" />
+                                    @item.Text
+                                </label>
+                            }
+                            else
+                            {
+                                <label class="radio">
+                                    <input type="radio" name="choiceItemIds" value="@item.Id" />
+                                    @item.Text
+                                </label>
+                            }
+                        </li>
+                    }
+                }
+                <li class="btn-toolbar poll-buttons">
+                    <button type="submit" class="btn btn-success">ارسال</button>
+                </li>
+            }
+            <div class="clearfix"></div>
+        }
+    </div>
+</div>
+<hr/>
+<div class="rounded-box newest">
+    <div class="inside polls-container">
+        <h1>نتایج</h1>
+        <hr>
+        @{
+            int idx = 0;
+        }
+
+        @helper RndColor(int idx)
+        {
+            switch (idx++)
+            {
+                case 0:
+                    <text>info</text>
+                    break;
+                case 1:
+                    <text>success</text>
+                    break;
+                case 2:
+                    <text>warning</text>
+                    break;
+                default:
+                    <text>danger</text>
+                    break;
+            }
+        }
+
+        @for (int j = 0; j < Model.Choices.Count; j++)
+        {
+            Choice choice = Model.Choices.ElementAt(j);
+            if (Model.Choices.Count > 1)
+            {
+                <h3>@choice.Title</h3>
+                if (!string.IsNullOrEmpty(choice.Description))
+                {
+                    <p>
+                        @choice.Description
+                    </p>
+                }
+            }
+
+            int sum = choice.Items.Sum(c => c.Answers.Count);
+            if (sum == 0)
+            {
+                sum = 1;
+            }
+            <ul class="items">
+                @for (int i = 0; i < choice.Items.Count; i++)
+                {
+                    ChoiceItem item = choice.Items.ElementAt(i);
+                    <li class="btn-toolbar tags-container">
+                        <p>
+                            @item.Text
+                        </p>
+                        <div class="progress @(i == choice.Items.Count - 1 ? "poll-last-item" : "") progress-striped progress-@RndColor(idx)">
+                            <div class="bar" style="width: @((item.Answers.Count*100)/sum)%;">
+                            </div>
+                        </div>
+                    </li>
+                    idx++;
+                }
+            </ul>
+            if (Model.Choices.Count > 1 && j < Model.Choices.Count)
+            {
+                <hr class="poll-line"/>
+            }
+        }
+    </div>
+</div>

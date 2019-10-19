@@ -1,0 +1,29 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Core.Domain.User
+
+@{
+    ViewBag.Title = "پنل مدیریت - کاربران - ثبت کاربر جدید";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("کاربران", "List", "Users"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("ثبت کاربر جدید", "Create", "Users",new{page=1},null));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr />
+        @using (Html.BeginForm("Create", "Users", FormMethod.Post, new {@class = "form-horizontal"}))
+        {
+            @Html.ValidationSummary(true)
+
+            <fieldset>
+                @{ Html.RenderPartial("_NewOrUpdate", Model); }
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">ثبت</button>
+                    @Html.ActionLink("برگشت", "List", new{page=1}, new {@class = "btn"})
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>

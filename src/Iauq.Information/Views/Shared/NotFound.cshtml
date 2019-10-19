@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_NarrowLayout.cshtml";
+    ViewBag.Title = ValidationResources.NotFound;
+    PagePartManager.Current.AddBreadcrumb(new MvcHtmlString(ValidationResources.NotFound));
+}
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Web.Mvc.UI
+@model string
+<div class="rounded-box newest narrow">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr/>
+        <p>@ValidationResources.NotFoundDescription</p>
+        @if (Model != null)
+        {
+            <p>آدرس درخواست شده: @Model</p>
+        }
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به خانه", "Default", "Home", new{Area=""}, new {@class = "btn"})
+        </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/Views/Shared/_NullLayout.cshtml";
+    ViewBag.Title = "عدم سرویس‌دهی";
+    PagePartManager.Current.AddBreadcrumb(new MvcHtmlString("عدم سرویس‌دهی"));
+}
+@using Iauq.Web.Mvc.UI
+@model string
+<div class="rounded-box newest narrow">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr/>
+        <p>کاربر گرامی، امکان سرویس‌دهی به شما بدلایل ذیل امکان پذیر نمی باشد.</p>
+        <ul>
+            <li>
+                نسخه مورد استفاده مرورگر شما پشتیبانی نمی شود. شما می توانید از آخرین نسخ مرورگرهای
+                <a href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie/" target="_blank">اینترنت اکسپلورر</a> (7.0 به بالا)، 
+                <a href="http://www.mozilla.org/en-US/firefox/new/" target="_blank">فایرفاکس</a> (3.0 به بالا)، 
+                <a href="https://www.google.com/intl/en/chrome/browser/" target="_blank">کروم</a> (12.0 به بالا)، 
+                <a href="http://www.apple.com/safari/download/" target="_blank">سافاری</a> (4.0 به بالا) و 
+                <a href="http://www.opera.com/download/" target="_blank">اپرا</a> (10.0 به بالا)
+                استفاده نمائید.
+            </li>
+        </ul>
+    </div>
+</div>

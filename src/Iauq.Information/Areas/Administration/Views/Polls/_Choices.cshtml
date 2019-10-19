@@ -1,0 +1,13 @@
+﻿@using Iauq.Core.Domain
+@model ICollection<Iauq.Core.Domain.Choice>
+
+<div id="choices">
+    @foreach (Choice choice in Model)
+    {
+        Html.RenderPartial("_EditChoice", choice);
+        <div id="items-@choice.Id">
+            @{ Html.RenderPartial("_Items", model: choice.Items); }
+        </div>
+        <div class="clearfix"></div>
+    }
+</div>

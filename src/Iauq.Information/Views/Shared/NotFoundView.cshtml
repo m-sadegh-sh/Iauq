@@ -1,0 +1,18 @@
+﻿@using Iauq.Web.Mvc.UI
+@using Resources
+@{
+    ViewBag.Title = ValidationResources.NotFound;
+    PagePartManager.Current.AddBreadcrumb(new MvcHtmlString((string) ViewBag.Title));
+}
+
+<div class="rounded-box row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr/>
+        <p class="center">@ValidationResources.NotFound</p>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به خانه", "Default", "Home", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

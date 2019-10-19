@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutWithSideBar.cshtml";
+    ViewBag.Title = "خانه - موضوعات برجسته";
+    ViewBag.Keywords = "موضوعات برجسته، رویدادها، تقویم، تقویم آموزشی";
+    ViewBag.Description = "موضوعات برجسته دانشگاه آزاد اسلامی، واحد قوچان";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("موضوعات برجسته", "Highlights", "Home", new {page = 1}, null));
+}
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@using MvcContrib.Pagination
+@model MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+<div class="rounded-box highlights row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr/>
+        @{ Html.RenderPartial("_Topic", Model); }
+        <div class="clearfix"></div>
+        @Html.RenderPager(Model as IPagination, page => Url.Action("Highlights", new { page }))
+        <div class="clearfix"></div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+﻿@model Iauq.Core.Domain.Role
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(r => r.Name, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(r => r.Name, new {@class = "input-xlarge"})
+        @Html.ValidationMessageFor(r => r.Name, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(r => r.CategoryId, new {@class = "control-label"})
+    <div class="controls">
+        @Html.DropDownListFor(r => r.CategoryId, (SelectList) ViewBag.Categories,"هیچکدام", new {@class = "input-large"})
+        @Html.ValidationMessageFor(r => r.CategoryId, null, new {@class = "help-inline"})
+    </div>
+</div>

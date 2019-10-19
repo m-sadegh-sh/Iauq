@@ -1,0 +1,19 @@
+﻿@model Iauq.Information.Models.Layout.CurrentDateModel
+
+<ul class="breadcrumb pull-left">
+    @if (Context.User.Identity.IsAuthenticated)
+    {
+        <li class="flat hidden-small">@string.Format("{0} عزیز خوش آمدید.", Context.User.Identity.Name)</li>
+        <li>@Html.ActionLink("مدیریت", "Default", "Administration", new {Area = "Administration"}, new {@class = "btn btn-info"})</li>
+        <li class="conditional-last-child">@Html.ActionLink("خروج", "Logout", "Home", null, new {@class = "btn btn-success"})</li>
+    }
+    else
+    {
+        <li class="conditional-last-child">@Html.ActionLink("ورود", "Login", "Home", null, new {@class = "btn btn-success"})</li>
+    }
+    <li class='flat divider-vertical@(Context.User.Identity.IsAuthenticated ? " hidden-small-phone" : "")'></li>
+    <li class='flat last-child@(Context.User.Identity.IsAuthenticated ? " hidden-small-phone" : "")'>
+        <span class="">@Model.CurrentDate.ToWritten()</span>
+    </li>
+    <div class="clearfix"></div>
+</ul>

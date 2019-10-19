@@ -1,0 +1,62 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@functions
+{
+
+    public string Is(string expectedController, string expectedAction)
+    {
+        return (ViewContext.RouteData.GetRequiredString("Controller") == expectedController &&
+                ViewContext.RouteData.GetRequiredString("Action") == expectedAction) ? "active" : "";
+    }
+
+    public string Is(string expectedController, string expectedAction, int id)
+    {
+        return (ViewContext.RouteData.GetRequiredString("Controller") == expectedController &&
+                ViewContext.RouteData.GetRequiredString("Action") == expectedAction &&
+                (ViewContext.RouteData.Values["Id"] ?? "") == id.ToString()) ? "active" : "";
+    }
+
+}
+
+@{
+    var childs = ViewBag.Childs as ICollection<Content>;
+    bool hasChilds = childs != null && childs.Count > 0;
+}
+@if (hasChilds)
+{
+    <div class="well visual-links">
+        <h4 class="nav-title">
+            <i class="icon-globe"></i>زیر مطالب
+        </h4>
+        <div class="clearfix"></div>
+        <ul class="nav nav-list">
+            @foreach (Content content in childs.OrderBy(c=>c.DisplayOrder))
+            {
+                if (content.Type == ContentType.Links)
+                {
+                    <li>@Html.PageLink(content)</li>
+                }
+                else
+                {
+                    <li class="@Is("Pages", "Details", content.Id)">@Html.PageLink(content)</li>
+                }
+            }
+        </ul>
+    </div>
+    <hr/>
+}
+<div class="well visual-links">
+    <h4 class="nav-title">
+        <i class="icon-globe"></i>صفحات اصلی
+    </h4>
+    <div class="clearfix"></div>
+    <ul class="nav nav-list">
+        <li class="@Is("Home", "Newest")">@Html.RouteLink("تازه‌ها", "Newest", new { page = 1 })</li>
+        <li class="@Is("Home", "Highlights")">@Html.RouteLink("موضوعات برجسته", "Highlights", new { page = 1 })</li>
+        <li class="divider"></li>
+        <li class="@Is("News", "Archive")">@Html.RouteLink("آرشیو اخبار", "News", new { page = 1 })</li>
+        <li class="@Is("Events", "Archive")">@Html.RouteLink("آرشیو رخدادها", "Events", new { page = 1 })</li>
+        <li class="@Is("Calendars", "Archive")">@Html.RouteLink("تقویم آموزشی", "Calendars", new { page = 1 })</li>
+    </ul>
+</div>
+<hr class="visible-small-phone"/>

@@ -1,0 +1,63 @@
+﻿@using Iauq.Core.Utilities
+@using Iauq.Information.Areas.Administration.Models.FileManager
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@using StructureMap
+@model Iauq.Information.Areas.Administration.Models.FileManager.RenameModel
+
+@{
+    ViewBag.Title = string.Format("پنل مدیریت - مدیریت فایل‌ها - تغییر نام: {0}", Model.OldName);
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("مدیریت فایل‌ها", "List", "FileManager", new { currentUrl = Constants.CdnUrl }, null));
+
+    var currentEntry = new EntryModel(new EntryModel(Model.CurrentEntry.CurrentUrl, true, true).CurrentUrl, true, true);
+    var directories = new List<MvcHtmlString>();
+
+    while (currentEntry.CurrentUrl != null)
+    {
+        directories.Add(@Html.ActionLink(FileManagerModel.ExtractName(currentEntry.CurrentUrl), "List", new { currentEntry.CurrentUrl }));
+
+        currentEntry = new EntryModel(currentEntry.ParentUrl, true, true);
+    }
+
+    directories.Reverse();
+
+    foreach (MvcHtmlString dir in directories)
+    {
+        PagePartManager.Current.AddBreadcrumb(dir);
+    }
+    
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink(string.Format("تغییر نام: {0}", Model.OldName), "Rename", "FileManager", new {targetUrl = Model.TargetUrl}));
+}
+
+@Html.AntiForgeryToken()
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr />
+        @using (Html.BeginForm("Rename", "FileManager", new {Model.TargetUrl}, FormMethod.Post, new {@class = "form-horizontal"}))
+        {
+            @Html.ValidationSummary(true)
+            <fieldset>
+                <div class="control-group">
+                    @Html.LabelFor(rm => rm.OldName, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.TextBoxFor(rm => rm.OldName, new {@class = "input-large", @readonly = "true"})
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(rm => rm.NewName, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.TextBoxFor(rm => rm.NewName, new {@class = "input-large"})
+                        @Html.ValidationMessageFor(rm => rm.NewName, null, new {@class = "help-inline"})
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">تغییر نام</button>
+                    @Html.ActionLink("برگشت", "List", new {currentUrl = ObjectFactory.GetInstance<IWebHelper>().MapUrl(FileManagerModel.EnsureIsDirectoryOrExtractParent(Model.TargetUrl))}, new {@class = "btn"})
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>

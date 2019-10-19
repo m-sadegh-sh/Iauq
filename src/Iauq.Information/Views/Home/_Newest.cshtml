@@ -1,0 +1,21 @@
+﻿@model MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>
+            تازه‌ها
+            <div id="newest-buttons" class="btn-group nav pull-left">
+                <button class="btn prev">
+                    قبلی</button>
+                <button class="btn next">
+                    بعدی</button>
+            </div>
+        </h1>
+        <hr />
+        @{ Html.RenderPartial("_Topic", Model, new ViewDataDictionary {new KeyValuePair<string, object>("IsNewest", true)}); }
+        <div class="clearfix" data-dummy="true">
+        </div>
+        <div class="box-footer single">
+            @Html.RouteLink("لیست کامل تازه‌ها", "Newest", new {page = 1}, new {@class = "btn"})
+        </div>
+    </div>
+</div>

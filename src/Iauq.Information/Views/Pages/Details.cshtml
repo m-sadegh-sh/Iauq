@@ -1,0 +1,71 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@model Iauq.Core.Domain.Content
+@{
+    Layout = "~/Views/Shared/_LayoutWithSideBar.cshtml";
+    ViewBag.Title = Model.Metadata.SeoTitle ?? Model.Title;
+    ViewBag.Keywords = Model.Metadata.SeoKeywords ?? Model.Tags;
+    ViewBag.Description = Model.Metadata.SeoDescription ?? Model.Abstract;
+
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    Content page = Model;
+
+    var pages = new List<Content> {page};
+
+    while (page.ParentId.HasValue)
+    {
+        page = page.Parent;
+        pages.Insert(0, page);
+    }
+
+    foreach (Content content in pages)
+    {
+        PagePartManager.Current.AddBreadcrumb(Html.PageLink(content));
+    }
+}
+@{
+    var message = TempData["CommentSubmitted"] as bool?;
+}
+@if (message.HasValue && message.Value)
+{
+    <div class="alert alert-success">
+        <button class="close" data-dismiss="alert">×</button>
+        <strong>نظر شما ارسال شد!</strong>
+    </div>
+    <div class="alert alert-block">
+        <button class="close" data-dismiss="alert">×</button>
+        <strong>لطفا تا تائید نظر توسط مدیر سایت شکیبا باشید و از ارسال نظرات متوالی خودداری نمائید.</strong>
+    </div>
+}
+<div class="rounded-box newest row-fluid">
+    <div class="inside text">
+        <h1>@ViewBag.Title
+            @if (Request.IsAuthenticated)
+            {
+                <div class="btn-group pull-left">
+                    <a href="@Url.RouteUrl("AdministrationEdit", new { Controller = "Contents", Model.Id })" class="btn btn-info">
+                        <i class="icon-edit icon-white"></i>
+                    </a>
+                </div>
+            }
+        </h1>
+        <hr>
+        @Html.Raw(Model.Body)
+        @if (Model.ShowNestedContents)
+        {
+            foreach (Content child in Model.Childs)
+            {
+                Html.RenderPartial("_InlineChild", child);
+            }
+        }
+        @Html.Partial("_ContentMetadata", Model)
+    </div>
+</div>
+<hr/>
+@{ Html.RenderPartial("_CommentsList", Model.Comments); }
+<hr/>
+<div class="row-fluid">
+    @{ Html.RenderPartial("_Comment", Model.Id); }
+    @{ Html.RenderAction("RelatedContents", new{Model.Id}); }
+</div>

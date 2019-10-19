@@ -1,0 +1,7 @@
+﻿@model Iauq.Core.Domain.ChoiceItem
+
+@Html.AntiForgeryToken()
+<div class="pull-right">
+    @Html.TextBoxFor(ci => Model.Text, new {@class = "input-xxlarge", placeholder = Html.DisplayNameFor(ci => Model.Text)})
+    @Html.ValidationMessageFor(ci => Model.Text, null, new {@class = "help-inline"})
+</div>

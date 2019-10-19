@@ -1,0 +1,62 @@
+// PORTRAIT TABLET TO DEFAULT DESKTOP
+// ----------------------------------
+
+@media (max-width: 979px) {
+  
+  div#nav ul.root li {
+    border-radius: 8px;
+	border-bottom-width: inherit;
+	margin-bottom:8px;
+  }
+ 
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+
+  // Fixed grid
+  #grid > .core(42px, 20px);
+
+  // Fluid grid
+  #grid > .fluid(5.801104972%, 2.762430939%);
+
+  // Input grid
+  #grid > .input(42px, 20px);
+
+  // No need to reset .thumbnails here since it's the same @gridGutterWidth
+
+  .contents > .span5 > .span7, .contents > .span5 > .span5 {
+    width: 99.999999993%;
+	margin-right:0;
+  }
+  
+  #nav .root li div.links {
+    display:block;
+  }
+  #nav .root li div.description {
+    display:block;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 979px) {
+  
+  #nav .root li a h3 {
+    font-size:15px !important;
+  }
+ 
+  #nav .root li div.links {
+    display:none;
+  }
+  #nav .root li div.description {
+    display:block;
+	width:100% !important;
+  }
+
+  #footer > div > .span3 {
+    width:48.93617020799999%;
+  }
+
+  #footer > div > .span3.third {
+    margin-right:0;
+	background-image:none;
+  }
+}

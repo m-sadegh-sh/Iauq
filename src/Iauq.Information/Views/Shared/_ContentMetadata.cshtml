@@ -1,0 +1,24 @@
+﻿@using Iauq.Information.Helpers
+@model Iauq.Core.Domain.Content
+<div class="clearfix"></div>
+<div class="box-footer single">
+    @if (string.IsNullOrWhiteSpace(Model.Tags))
+    {
+        <text>این مطلب برچسبی ندارد!</text>
+    }
+    else
+    {
+        <b>برچسب ها:</b>
+        @Html.RenderTags(Model.Tags, "")
+    }
+    /
+    @if (Model.PageViews == 0)
+    {
+        <text>بدون بازدید!</text>
+    }
+    else
+    {
+        <b>تعداد بازدید:</b>
+        @Model.PageViews
+    }
+</div>

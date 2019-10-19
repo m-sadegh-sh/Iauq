@@ -1,0 +1,13 @@
+﻿<div class="middle-bar">
+    <a href="@Url.Action("Default", "Home")" class="pull-right" alt="دانشگاه آزاد اسلامی واحد قوچان" title="دانشگاه آزاد اسلامی واحد قوچان">
+        <img src="/cdn/Images/Template/header-logo.png" />
+    </a>@*@if (!(ViewContext.RouteData.GetRequiredString("Controller") == "Home" && ViewContext.RouteData.GetRequiredString("Action") == "Search"))
+    {
+        using (Html.BeginForm("Search", "Home",new{Area="",page=1}, FormMethod.Get, new {@class = "form-search pull-left"}))
+        {
+            @Html.TextBox("q", "", new {id = "ssq", @class = "input-medium search-query", placeholder = "جستجو..."})
+        }
+    }*@
+    <div class="clearfix">
+    </div>
+</div>

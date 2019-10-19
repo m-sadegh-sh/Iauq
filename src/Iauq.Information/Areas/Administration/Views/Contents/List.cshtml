@@ -1,0 +1,237 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using MvcContrib.Pagination
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@model IEnumerable<Iauq.Core.Domain.Content>
+@{
+    ViewBag.Title = "پنل مدیریت - محتوا";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("محتوا", "List", "Contents", new {page = 1}, null));
+
+    dynamic hasType = ViewBag.ContentType != null;
+    ContentType type = ContentType.News;
+    int recordPerPage = ViewBag.RecordPerPage ?? Constants.RecordPerPage;
+    if (hasType)
+    {
+        type = (ContentType) ViewBag.ContentType;
+    }
+}
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <div class="btn-toolbar ignore-heading pull-left">
+            <div class="btn-group">
+                <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">@(" [" + recordPerPage + "] ")... <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>@Html.RouteLink("همه", "AdministrationList", new { Controller = "Contents", page = ((IPagination)Model).PageNumber })</li>
+                    <li>@Html.ActionLink("10", "List", new { Controller = "Contents", page = ((IPagination)Model).PageNumber, recordPerPage = 10 })</li>
+                    <li>@Html.ActionLink("50", "List", new { Controller = "Contents", page = ((IPagination)Model).PageNumber, recordPerPage = 50 })</li>
+                    <li>@Html.ActionLink("100", "List", new { Controller = "Contents", page = ((IPagination)Model).PageNumber, recordPerPage = 100 })</li>
+                </ul>
+            </div>    
+            <div class="btn-group">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">فیلتر بر اساس@(hasType?" ["+type.ToLocalizedString()+"] ":"")... <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>@Html.RouteLink("همه", "AdministrationList", new {Controller = "Contents", page = 1})</li>
+                    <li>@Html.ActionLink("خبر", "List", new { contentType = "news", page = 1, recordPerPage })</li>
+                    <li>@Html.ActionLink("رخداد", "List", new { contentType = "event", page = 1, recordPerPage })</li>
+                    <li>@Html.ActionLink("تقویم", "List", new { contentType = "calendar", page = 1, recordPerPage })</li>
+                    <li>@Html.ActionLink("صفحه", "List", new { contentType = "page", page = 1, recordPerPage })</li>
+                    <li>@Html.ActionLink("لینک", "List", new { contentType = "link", page = 1, recordPerPage })</li>
+                    <li>@Html.ActionLink("منو", "List", new { contentType = "menu", page = 1, recordPerPage })</li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">ثبت... <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>@Html.ActionLink("خبر", "Create", new {contentType = "news"})</li>
+                    <li>@Html.ActionLink("رخداد", "Create", new {contentType = "event"})</li>
+                    <li>@Html.ActionLink("تقویم", "Create", new {contentType = "calendar"})</li>
+                    <li>@Html.ActionLink("صفحه", "Create", new {contentType = "page"})</li>
+                    <li>@Html.ActionLink("لینک", "Create", new {contentType = "link"})</li>
+                    <li>@Html.ActionLink("منو", "Create", new {contentType = "menu"})</li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Title)
+                    </th>
+                    @if (!hasType || (type == ContentType.Pages || type == ContentType.Menu || type == ContentType.Links))
+                    {
+                        <th>
+                            @Html.DisplayNameFor(c => c.DisplayOrder)
+                        </th>
+                    }
+                    @if (!hasType || type == ContentType.News)
+                    {
+                        <th>
+                            @Html.DisplayNameFor(c => c.IsHot)
+                        </th>
+                    }
+                    @if (!hasType)
+                    {
+                        <th>
+                            @Html.DisplayNameFor(c => c.TypeInt)
+                        </th>
+                    }
+                    @if (!hasType || (type == ContentType.News || type == ContentType.Events || type == ContentType.Calendars))
+                    {
+                        <th>
+                            @Html.DisplayNameFor(c => c.Rate)
+                        </th>
+                    }
+                    @if (!hasType || (type == ContentType.Pages || type == ContentType.Links))
+                    {
+                        <th>
+                            @Html.DisplayNameFor(c => c.ParentId)
+                        </th>
+                    }
+                    <th>
+                        @Html.DisplayNameFor(c => c.AuthorId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.CategoryId)
+                    </th>
+                    @if (!hasType || (type == ContentType.News || type == ContentType.Events || type == ContentType.Calendars))
+                    {
+                        <th>
+                            @Html.DisplayNameFor(c => c.Comments)
+                        </th>
+                    }
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Content content in Model)
+                {
+                    <tr>
+                        <td>
+                            @content.Title.EnsureLength(40)
+                        </td>
+                        @if (!hasType || (type == ContentType.Pages || type == ContentType.Menu || type == ContentType.Links))
+                        {
+                            <td>
+                                @content.DisplayOrder
+                            </td>
+                        }
+                        @if (!hasType || type == ContentType.News)
+                        {
+                            <td>
+                                @(content.IsHot ? "بله" : "خیر")
+                            </td>
+                        }
+                        @if (!hasType)
+                    {
+                            <td>
+                                @content.Type.ToLocalizedString()
+                            </td>
+                        }
+                        @if (!hasType || (type == ContentType.News || type == ContentType.Events || type == ContentType.Calendars))
+                        {
+                            <td>
+                                @if (content.Rate <= 0)
+                                {
+                                    <text>بدون امتیاز</text>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(trap => content.Rate)
+                                }
+                            </td>
+                        }
+                        @if (!hasType || (type == ContentType.Pages || type == ContentType.Links))
+                        {
+                            <td>
+                                @helper ShowSubItems(Content content, bool setSeparator)
+                                {
+                                    if (content.Parent != null)
+                                    {
+                                        @ShowSubItems(content.Parent, true)
+                                    }
+
+                                    @Html.ActionLink(content.Title.EnsureLength(20), "Edit", new {content.Id})
+
+                                    if (setSeparator)
+                                    {
+                                        <text>/</text>
+                                    }
+                                }
+                                @if (content.Parent != null)
+                                {
+                                    @ShowSubItems(content.Parent, false)
+                                }
+                                else
+                                {
+                                    <div>ندارد</div>
+                                }
+                            </td>
+                        }
+                        <td>
+                            @Html.ActionLink(content.Author.UserName.EnsureLength(10), "Edit", "Users", new {content.Author.Id}, null)
+                        </td>
+                        <td>
+                            @if (content.Category != null)
+                            {
+                                @Html.ActionLink(content.Category.Title.EnsureLength(20), "Edit", "Categories", new {content.Category.Id}, null)
+                            }
+                            else
+                            {
+                                <text>ندارد</text>
+                            }
+                        </td>
+                        @if (!hasType || (type == ContentType.News || type == ContentType.Events || type == ContentType.Calendars))
+                        {
+                            <td>
+                                @if (content.Comments.Count == 0)
+                                {
+                                    <text>بدون نظر</text>
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(content.Comments.Count.ToString(), "List", "Comments", new {ownerId = content.Id}, null)
+                                }
+                            </td>
+                        }
+                        <td class="btn-group">
+                            @Html.ActionLink("ویرایش", "Edit", new {content.Id}, new {@class = "btn"})
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new {content.Id}), new Dictionary<string, object> {{"class", "btn btn-danger"}, {"data-toggle", "modal"}, {"data-target", "#delete-modal"}, {"data-delete-handle", "true"}})
+                            @Html.ActionLink(content.IsPublished ? "عدم انتشار" : "انتشار", "ChangePublication", new {content.Id}, new {@class = "btn"})
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.Partial("_DeleteConfirmationModal")
+            @Html.RenderPager(Model as IPagination, page => Url.Action("List", new { page, recordPerPage }))
+        }
+        <div class="clearfix">
+        </div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

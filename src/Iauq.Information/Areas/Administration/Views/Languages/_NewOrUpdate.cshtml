@@ -1,0 +1,17 @@
+﻿@model Iauq.Core.Domain.Language
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(l => l.Name, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(l => l.Name, new {@class = "input-xlarge"})
+        @Html.ValidationMessageFor(l => l.Name, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(l => l.IsoCode, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(l => l.IsoCode, new {@class = "input-mini"})
+        @Html.ValidationMessageFor(l => l.IsoCode, null, new {@class = "help-inline"})
+    </div>
+</div>

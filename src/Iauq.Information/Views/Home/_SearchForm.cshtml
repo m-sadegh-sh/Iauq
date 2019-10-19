@@ -1,0 +1,7 @@
+﻿@model Iauq.Information.Models.Home.SearchModel
+
+
+@using (Html.BeginForm("Search", "Home", FormMethod.Get, new {@class = "well form-search large-form-search"}))
+{
+    @Html.TextBox("q",Model.Q, new {id="lsq",@class = "input-xxlarge search-query large-search-query"})
+}

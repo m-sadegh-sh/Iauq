@@ -1,0 +1,28 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Core.Domain.Carousel
+
+@{
+    ViewBag.Title = "پنل مدیریت - اسلاید‌ها - ثبت اسلاید جدید";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("اسلاید‌ها", "List", "Carousels", new { page = 1 }, null));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("ثبت اسلاید جدید", "Create", "Carousels"));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr />
+        @using (Html.BeginForm("Create", "Carousels", FormMethod.Post, new {enctype = "multipart/form-data", @class = "form-horizontal"}))
+        {
+            @Html.ValidationSummary(true)
+            <fieldset>
+                @{ Html.RenderPartial("_NewOrUpdate", Model); }
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">ثبت</button>
+                    @Html.ActionLink("برگشت", "List", new{page=1}, new {@class = "btn"})
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>

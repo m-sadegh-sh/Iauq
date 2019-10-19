@@ -1,0 +1,30 @@
+﻿@using Iauq.Information.Helpers
+@model Iauq.Core.Domain.Poll
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(p => p.IsActive, new {@class = "control-label"})
+    <div class="controls">
+        @Html.CheckBoxFor(p => p.IsActive, new {@class = "input-mini"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(p => p.ShowOnHomePage, new {@class = "control-label"})
+    <div class="controls">
+        @Html.CheckBoxFor(p => p.ShowOnHomePage, new {@class = "input-mini"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(p => p.Title, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(p => p.Title, new {@class = "input-xlarge"})
+        @Html.ValidationMessageFor(p => p.Title, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(p => p.Description, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextAreaFor(p => p.Description, 4, 50, new { @class = "input-xlarge ckeditor" })
+        @Html.ValidationMessageFor(p => p.Description, null, new {@class = "help-inline"})
+    </div>
+</div>

@@ -1,0 +1,5 @@
+﻿@model  MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+@{ Html.RenderPartial("_NewsAbstractModel", Model); }
+<div class="box-footer single">
+    @Html.RouteLink("آرشیو اخبار", "News", new { page = 1 }, new { @class = "btn" })
+</div>

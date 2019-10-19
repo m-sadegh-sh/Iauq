@@ -1,0 +1,27 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Information.Helpers
+@model IEnumerable<Iauq.Core.Domain.Content>
+<hr class="visible-small-phone"/>
+<div class="rounded-box highlights span6 pull-left">
+    <div class="inside">
+        <h1>
+            مطالب مرتبط
+        </h1>
+        <hr />
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRelated</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (Content page in Model)
+                {
+                    <li>@Html.TopicTitle(page)</li>
+                }
+            </ul>
+        }
+    </div>
+</div>

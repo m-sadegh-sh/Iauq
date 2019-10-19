@@ -1,0 +1,19 @@
+﻿@using Iauq.Core.Domain
+@model int
+<div class="rounded-box highlights span6 no-right-margin pull-right">
+    <div class="inside text">
+        <h1>ثبت نظر جدید
+        </h1>
+        <hr />
+        @using (Html.BeginForm(ViewContext.RouteData.GetRequiredString("Action"), ViewContext.RouteData.GetRequiredString("Controller"), FormMethod.Post))
+        {
+        <fieldset>
+            <input type="hidden" name="id" value="@Model" />
+            @{ Html.RenderPartial("_NewComment", ViewBag.Comment as Comment ?? new Comment()); }
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">ارسال</button>
+            </div>
+        </fieldset>
+        }
+    </div>
+</div>

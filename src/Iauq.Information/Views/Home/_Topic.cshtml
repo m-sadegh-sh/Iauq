@@ -1,0 +1,47 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@model MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+@if (!Model.Any())
+{
+    <p class="center">@ValidationResources.NoRecords</p>
+}
+else
+{
+    foreach (Content content in Model)
+    {
+        <div data-element="true" @(Html.Raw(ViewData["IsNewest"] != null ? "class=\"row-item span3\"" : "class=\"row-item\""))>
+            <h3>@Html.TopicTitle(content)
+                <br/>
+                <span>@(content.Category!=null?content.Category.Title+" /" :"") @content.PublishDate.ToPersianDate().ToWritten() / 
+                
+                    @if (string.IsNullOrWhiteSpace(content.Tags))
+                    {
+                        <text>این مطلب برچسبی ندارد!</text>
+                    }
+                    else
+                    {
+                        <b>برچسب ها:</b>
+                        @Html.RenderTags(content.Tags, "")
+                    }
+                    /
+                    @if (content.PageViews == 0)
+                    {
+                        <text>بدون بازدید!</text>
+                    }
+                    else
+                    {
+                        <b>تعداد بازدید:</b>
+                        @content.PageViews
+                    }
+                </span>
+            </h3>
+            @if(!string.IsNullOrEmpty(content.Abstract))
+            {
+                <p class="text">@Html.Raw(content.Abstract)</p>
+            }
+            <div class="clearfix"></div>
+        </div>
+    }
+}

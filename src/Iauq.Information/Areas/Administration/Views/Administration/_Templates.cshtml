@@ -1,0 +1,41 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@model IEnumerable<Iauq.Core.Domain.Template>
+@if (!Model.Any())
+{
+    <p class="center">@ValidationResources.NoRecords</p>
+}
+else
+{
+    <div class="accordion" id="templates-accordion">
+        @foreach (Template template in Model)
+        {
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#templates-accordion" href="#collapse-template-@(template.Id)">
+                        @template.Title.EnsureLength(20)
+                    </a>
+                    <span class="label label-info commanding-label" id="collapse-header-template-@(template.Id)" target-id="@(template.Id)">انتخاب</span>
+                </div>
+                <div id="collapse-template-@(template.Id)" class="accordion-body collapse" style="height: 0px;">
+                    <div class="accordion-inner" style="height: 200px; overflow: auto;" id="collapse-body-template-@(template.Id)">
+                        @Html.Raw(template.Body)
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<script type="text/javascript">
+    $(".commanding-label").click(function() {
+        var id = $(this).attr("target-id");
+
+        var ckeditor = $('#' + $('#current-ckeditor-id').val());
+        ckeditor.setFocus();
+        ckeditor.insertHtml($('#collapse-body-template-' + id).html());
+
+        $('#templates-modal').modal('hide');
+    });
+</script>

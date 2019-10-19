@@ -1,0 +1,28 @@
+﻿@using Iauq.Information.Models.Home
+@model Iauq.Information.Models.Home.CarouselsModel
+
+<div class="camera-border hidden-small-phone">
+    <div id="camera">
+        @foreach (CarouselModel carouselModel in Model)
+        {
+            <div data-thumb="@carouselModel.ImageUrl.Replace(".", "-thumb.")" data-src="@carouselModel.ImageUrl">
+                <div class="camera-caption">
+                    <h4>
+                        @if (!string.IsNullOrEmpty(carouselModel.LinkUrl))
+                        {
+                            <a href="@carouselModel.LinkUrl">@carouselModel.Title</a>
+                        }
+                        else
+                        {
+                            @carouselModel.Title
+                        }
+                    </h4>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="clearfix">
+    </div>
+</div>
+<span class="clearfix hidden-small-phone">
+</span>

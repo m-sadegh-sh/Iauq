@@ -1,0 +1,54 @@
+﻿@using Iauq.Core.Utilities
+@using StructureMap
+@using Iauq.Information.Areas.Administration.Models.FileManager
+@using Iauq.Information.Helpers
+
+@functions
+{
+
+    public string Is(string expectedController, string expectedAction, string currentUrl)
+    {
+        return
+            (ViewContext.RouteData.GetRequiredString("Controller") == expectedController &&
+             ViewContext.RouteData.GetRequiredString("Action") == expectedAction && ("/" + ViewContext.RouteData.Values["currentUrl"]) == currentUrl) ? "active" : "";
+    }
+
+}
+
+@helper Recursive(string dir)
+{
+    string[] subDirs = Directory.GetDirectories(dir);
+
+    if (subDirs.Length > 0)
+    {
+        <ul class="nav nav-list">
+            @foreach (string subDir in subDirs)
+            {
+                <li class="@Is("FileManager", "List", ObjectFactory.GetInstance<IWebHelper>().MapUrl(subDir))">
+                    @Html.ActionLink(FileManagerModel.ExtractName(subDir), "List", "FileManager", new {currentUrl = ObjectFactory.GetInstance<IWebHelper>().MapUrl(subDir)}, null)
+                    @Recursive(subDir)
+                </li>
+            }
+        </ul>
+    }
+}
+
+<div class="well visual-links">
+    <h4 class="nav-title">
+        <i class="icon-folder-open"></i>مسیرهای موجود 
+    </h4>
+    <div class="clearfix"></div>
+    <ul class="nav nav-list">
+        <li class="@Is("FileManager", "List", Constants.CdnUrl)">
+            @Html.ActionLink(FileManagerModel.ExtractName(Constants.CdnUrl), "List", "FileManager", new {currentUrl = Constants.CdnUrl}, null)
+            @Recursive(HttpContext.Current.Server.MapPath(Constants.CdnUrl))
+        </li>
+    </ul>
+</div>
+<hr class="visible-small-phone"/>
+
+@{
+    ViewBag.HasPrimary = true;
+}
+
+@{ Html.RenderPartial("~/Areas/Administration/Views/Shared/_Well.cshtml"); }

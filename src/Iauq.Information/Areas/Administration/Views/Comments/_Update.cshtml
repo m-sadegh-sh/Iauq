@@ -1,0 +1,17 @@
+﻿@model Iauq.Core.Domain.Comment
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(c => c.Title, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(c => c.Title, new {@class = "input-xxlarge"})
+        @Html.ValidationMessageFor(c => c.Title, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => c.Body, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextAreaFor(c => c.Body,10,50, new {@class = "input-xxlarge"})
+        @Html.ValidationMessageFor(c => c.Body, null, new {@class = "help-inline"})
+    </div>
+</div>

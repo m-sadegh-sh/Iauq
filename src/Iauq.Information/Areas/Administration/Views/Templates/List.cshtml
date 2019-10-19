@@ -1,0 +1,74 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@using MvcContrib.Pagination
+@using Iauq.Information.App_GlobalResources
+@model IEnumerable<Iauq.Core.Domain.Template>
+
+@{
+    ViewBag.Title = "پنل مدیریت - الگو‌ها";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("الگو‌ها", "List", "Templates", new { page = 1 }, null));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+            <div class="btn-group pull-left">
+                @Html.ActionLink("ثبت الگو جدید", "Create", null, new { @class = "btn btn-success" })
+            </div>
+        </h1>
+        <hr/>
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    
+                    <th>
+                        @Html.DisplayNameFor(l => l.Title)
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Template template in Model)
+                {
+                    <tr>
+                      
+                        <td>
+                            @template.Title.EnsureLength(20)
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("ویرایش", "Edit", new { template.Id }, new { @class = "btn" })
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new { template.Id }), new Dictionary<string, object> { { "class", "btn btn-danger" }, { "data-toggle", "modal" }, { "data-target", "#delete-modal" }, { "data-delete-handle", "true" } })
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.Partial("_DeleteConfirmationModal")
+            @Html.RenderPager(Model as IPagination, page => Url.Action("List", new {page}))
+        }
+        <div class="clearfix"></div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

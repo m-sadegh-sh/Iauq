@@ -1,0 +1,55 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@model  MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+@if (!Model.Any())
+{
+    <p class="center">@ValidationResources.NoRecords</p>
+}
+else
+{
+    if (ViewContext.IsChildAction)
+    {
+        <text>
+            <marquee behavior="" direction="up" scrollamount="1" scrolldelay="30" onmouseover=" this.stop() "
+                     onmouseout=" this.start() " height="238">
+        </text>
+    }
+        <div class="rows-items">
+        @foreach (Content eventModel in Model)
+        {
+            <div class="row-item">
+                <h3>
+                    @Html.EventTitle(eventModel)<br />
+                    <span>@(eventModel.Category != null ? eventModel.Category.Title + " /" : "") @eventModel.PublishDate.ToPersianDate().ToWritten() / 
+                
+                        @if (string.IsNullOrWhiteSpace(eventModel.Tags))
+                        {
+                            <text>این مطلب برچسبی ندارد!</text>
+                        }
+                        else
+                        {
+                            <b>برچسب ها:</b>
+                            @Html.RenderTags(eventModel.Tags, "")
+                        }
+                        /
+                        @if (eventModel.PageViews == 0)
+                        {
+                            <text>بدون بازدید!</text>
+                        }
+                        else
+                        {
+                            <b>تعداد بازدید:</b>
+                            @eventModel.PageViews
+                        }
+                    </span>
+                </h3>
+            </div>
+        }
+    </div>
+        if (ViewContext.IsChildAction)
+        {
+         @:</marquee>
+     }
+}

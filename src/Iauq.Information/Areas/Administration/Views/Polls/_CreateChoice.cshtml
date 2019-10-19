@@ -1,0 +1,15 @@
+﻿@model Iauq.Core.Domain.Choice
+<div id="choice-@Model.Id">
+    <hr/>
+    @using (Html.BeginForm("CreateChoice", "Polls", new {pollId = Model.OwnerId}, FormMethod.Post, new {@class = "form-horizontal"}))
+    {
+        @Html.ValidationSummary(true)
+        <fieldset>
+            @{ Html.RenderPartial("_NewOrUpdateChoice", Model); }
+            <div class="form-actions">
+                <button class="btn btn-success" type="submit">
+                    بروز رسانی</button>
+            </div>
+        </fieldset>
+    }
+</div>

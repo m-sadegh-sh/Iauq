@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutWithSideBar.cshtml";
+    ViewBag.Title = "خانه - تازه‌ها";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("تازه‌ها", "Newest", "Home", new { page = 1 }, null));
+}
+@using Iauq.Information.Helpers
+@using MvcContrib.Pagination
+@using Iauq.Web.Mvc.UI
+@model MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr/>
+        <div>
+            @{ Html.RenderPartial("_Topic", Model, new ViewDataDictionary {new KeyValuePair<string, object>("IsNewest", true)}); }
+        </div>
+        <div class="clearfix"></div>
+        @Html.RenderPager(Model as IPagination, page => Url.Action("Newest", new { page }))
+        <div class="clearfix"></div>
+    </div>
+</div>

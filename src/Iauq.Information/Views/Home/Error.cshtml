@@ -1,0 +1,20 @@
+﻿@using Iauq.Information.App_GlobalResources
+@using Iauq.Web.Mvc.UI
+@{
+    Layout = "~/Views/Shared/_NarrowLayout.cshtml";
+    ViewBag.Title = "خانه - " + ValidationResources.InternalError;
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(new MvcHtmlString(ValidationResources.InternalError));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr/>
+        <p>@ValidationResources.InternalErrorDescription</p>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به خانه", "Default", "Home", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

@@ -1,0 +1,85 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Information.App_GlobalResources
+@model Iauq.Information.Models.Home.SearchModel
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>نتایج جستجو
+        </h1>
+        <hr/>
+        @if (Model.IsSearched && !Model.Results.Any())
+        {
+            <p class="center">@ValidationResources.NoMatchRecords</p>
+        }
+        else
+        {
+            <ul class="unstyled search-results">
+                @foreach (Content content in Model.Results)
+                {
+                    switch (content.Type)
+                    {
+                        case ContentType.News:
+                            <text>
+                                <li>
+                                    <h2>@Html.NewsTitle(content)</h2>
+                                    @if (!string.IsNullOrEmpty(content.Abstract))
+                                    {
+                                        <p>
+                                            @Html.Raw(content.Abstract)
+                                        </p>
+                                    }
+                                    @Html.Partial("_ContentMetadata", content)
+                                </li>
+                            </text>
+                            break;
+                        case ContentType.Events:
+                            <text>
+                                <li>
+                                    <h2>@Html.EventTitle(content)</h2>
+                                    @if (!string.IsNullOrEmpty(content.Abstract))
+                                    {
+                                        <p>
+                                            @Html.Raw(content.Abstract)
+                                        </p>
+                                    }
+                                    @Html.Partial("_ContentMetadata", content)
+                                </li>
+                            </text>
+                            break;
+                        case ContentType.Calendars:
+                            <text>
+                                <li>
+                                    <h2>@Html.CalendarLink(content)</h2>
+                                    @if (!string.IsNullOrEmpty(content.Abstract))
+                                    {
+                                        <p>
+                                            @Html.Raw(content.Abstract)
+                                        </p>
+                                    }
+                                    @Html.Partial("_ContentMetadata", content)
+                                </li>
+                            </text>
+                            break;
+                        case ContentType.Pages:
+                            <text>
+                                <li>
+                                    <h2>@Html.PageLink(content)</h2>
+                                    @if (!string.IsNullOrEmpty(content.Abstract))
+                                    {
+                                        <p>
+                                            @Html.Raw(content.Abstract)
+                                        </p>
+                                    }
+                                    @Html.Partial("_ContentMetadata", content)
+                                </li>
+                            </text>
+                            break;
+                    }
+                }
+            </ul>
+            @Html.RenderPager(Model.Results, page => Url.Action("Search", new {page, q = Model.Q}))
+        }
+        <div class="clearfix"></div>
+    </div>
+</div>

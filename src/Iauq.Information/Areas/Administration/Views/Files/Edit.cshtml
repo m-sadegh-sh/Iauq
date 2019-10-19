@@ -1,0 +1,68 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Information.Areas.Administration.Models.Files.DbRenameModel
+
+@{
+    ViewBag.Title = string.Format("پنل مدیریت - فایل‌ها - ویرایش: {0}", Model.OldName);
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("فایل‌ها", "List", "Files", new {page = 1}, null));
+
+    var parent = ViewBag.Parent as Iauq.Core.Domain.File;
+
+    Iauq.Core.Domain.File currentFile = parent;
+    var files = new List<MvcHtmlString>();
+
+    while (currentFile != null)
+    {
+        files.Add(@Html.ActionLink(currentFile.Name, "List", new {currentFile.Id, page = 1}));
+
+        currentFile = currentFile.Parent;
+    }
+
+    files.Reverse();
+
+    foreach (MvcHtmlString file in files)
+    {
+        PagePartManager.Current.AddBreadcrumb(file);
+    }
+
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink(string.Format("ویرایش: {0}", Model.OldName), "Edit", "Files", new {Model.Id}));
+}
+
+@Html.AntiForgeryToken()
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr />
+        @using (Html.BeginForm("Edit", "Files", new {Model.Id}, FormMethod.Post, new {@class = "fodrm-horizontal"}))
+        {
+            @Html.ValidationSummary(true)
+            <fieldset>
+                <div class="control-group">
+                    @Html.LabelFor(drm => drm.OldName, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.TextBoxFor(drm => drm.OldName, new {@class = "input-large", @readonly = "true"})
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(drm => drm.NewName, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.TextBoxFor(drm => drm.NewName, new {@class = "input-large"})
+                        @Html.ValidationMessageFor(drm => drm.NewName, null, new {@class = "help-inline"})
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(udfm => udfm.AccessMode, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.DropDownListFor(udfm => udfm.AccessMode, (SelectList) ViewBag.AccessModes, new {@class = "input-large"})
+                        @Html.ValidationMessageFor(fum => fum.AccessMode, null, new {@class = "help-inline"})
+                    </div>
+                </div>
+                <div class="fodrm-actions">
+                    <button type="submit" class="btn btn-success">تغییر نام</button>
+                    @Html.ActionLink("برگشت", "List", new {Model.ParentId, page = 1}, new {@class = "btn"})
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>

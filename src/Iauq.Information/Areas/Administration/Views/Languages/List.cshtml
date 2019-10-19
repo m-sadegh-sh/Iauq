@@ -1,0 +1,80 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@using MvcContrib.Pagination
+@using Iauq.Information.App_GlobalResources
+@model IEnumerable<Iauq.Core.Domain.Language>
+
+@{
+    ViewBag.Title = "پنل مدیریت - زبان‌ها";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("زبان‌ها", "List", "Languages", new { page = 1 }, null));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+            <div class="btn-group pull-left">
+                @Html.ActionLink("ثبت زبان جدید", "Create", null, new {@class = "btn btn-success"})
+            </div>
+        </h1>
+        <hr/>
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    
+                    <th>
+                        @Html.DisplayNameFor(l => l.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(l => l.IsoCode)
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Language language in Model)
+                {
+                    <tr>
+                      
+                        <td>
+                            @language.Name.EnsureLength(20)
+                        </td>
+                        <td>
+                            @language.IsoCode
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("ویرایش", "Edit", new {language.Id}, new {@class = "btn"})
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new { language.Id }), new Dictionary<string, object> { { "class", "btn btn-danger" }, { "data-toggle", "modal" }, { "data-target", "#delete-modal" }, { "data-delete-handle", "true" } })
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.Partial("_DeleteConfirmationModal")
+            @Html.RenderPager(Model as IPagination, page => Url.Action("List", new {page}))
+        }
+        <div class="clearfix"></div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+﻿@using Iauq.Core.Domain
+@model Iauq.Core.Domain.Poll
+<form class="form-horizontal">
+    <li class="btn-toolbar tags-container">
+        <h3>@Model.Title</h3>
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            @Html.Raw(Model.Description)
+        }
+    </li>
+    @{
+        int idx = 0;
+    }
+
+    @helper RndColor(int idx)
+    {
+        switch (idx++)
+        {
+            case 0:
+                <text>info</text>
+                break;
+            case 1:
+                <text>success</text>
+                break;
+            case 2:
+                <text>warning</text>
+                break;
+            default:
+                <text>danger</text>
+                break;
+        }
+    }
+
+    @foreach (Choice choice in Model.Choices)
+    {
+        if (Model.Choices.Count > 1)
+        {
+            <li class="btn-toolbar tags-container">
+                <h4>@choice.Title</h4>
+                @if (!string.IsNullOrEmpty(choice.Description))
+                {
+                    <p>
+                        @choice.Description
+                    </p>
+                }
+            </li>
+        }
+
+        int sum = choice.Items.Sum(c => c.Answers.Count);
+        if (sum == 0)
+        {
+            sum = 1;
+        }
+
+        for (int i = 0; i < choice.Items.Count; i++)
+        {
+            ChoiceItem item = choice.Items.ElementAt(i);
+            <li class="btn-toolbar tags-container poll-item">
+                <p>
+                    @item.Text
+                </p>
+                <div class="progress @(i == choice.Items.Count - 1 ? "poll-last-item" : "") progress-striped progress-@RndColor(idx)">
+                    <div class="bar" style="width: @((item.Answers.Count*100)/sum)%;">
+                    </div>
+                </div>
+            </li>
+            idx++;
+        }
+    }
+    @if (ViewBag.ShowResults != null)
+    {
+        <li class="btn-toolbar poll-buttons">
+            @Ajax.RouteLink("نظر دهید", "Vote", null, new AjaxOptions {HttpMethod = "GET", UpdateTargetId = "poll", InsertionMode = InsertionMode.Replace}, new Dictionary<string, object> {{"class", "btn btn-info"}})
+            @Html.ActionLink("آرشیو", "Archive", "Polling", new {page = 1}, new {@class = "btn"})
+        </li>
+    }
+    else
+    {
+        <li class="btn-toolbar poll-buttons">
+            @Html.ActionLink("آرشیو", "Archive", "Polling", new {page = 1}, new {@class = "btn"})
+        </li>
+    }
+</form>

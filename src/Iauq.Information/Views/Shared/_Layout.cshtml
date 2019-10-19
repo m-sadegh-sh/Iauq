@@ -1,0 +1,30 @@
+﻿@using Iauq.Web.Mvc.UI
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="content-language" content="fa-ir">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>@PagePartManager.Current.RenderTitle(null)</title>
+        <meta name="robots" content="index, follow" />
+        <meta name="keywords" content="@ViewBag.Keywords، دانشگاه آزاد، دانشگاه آزاد اسلامی، آزاد قوچان، دانشگاه آزاد قوچان، دانشگاه آزاد اسلامی قوچان، iauq, iauquchan, Islamic Azad University Quchan Branch, Quchan, Iran, IAU, Islamic, Azad, University Quchan, Azad Quchan, iauq.ac.ir, iauquchan.com"/>
+        <meta name="description" content="@ViewBag.Description، وب سایت رسمی دانشگاه آزاد اسلامی، واحد قوچان - www.iauq.ac.ir"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        @{ Html.RenderAction("Styles", "Layout", new {Area = ""}); }
+    </head>
+    <body>
+        <div class="fluid-container wrapper">
+            @{ Html.RenderAction("TopBar", "Layout", new {Area = ""}); }
+            @{ Html.RenderPartial("_MiddleBar"); }
+            <div class="clearfix"></div>
+            @{ Html.RenderAction("NavBar", "Layout", new {Area = ""}); }
+            @PagePartManager.Current.RenderBreadcrumbs()
+            @RenderBody()
+            <hr/>
+            <div class="push"></div>
+            <div class="clearfix"></div>
+        </div>
+        @{ Html.RenderAction("Footer", "Layout", new {Area = ""}); }
+        @{ Html.RenderAction("Scripts", "Layout", new {Area = ""}); }
+        @RenderSection("Scripts", false)
+    </body>
+</html>

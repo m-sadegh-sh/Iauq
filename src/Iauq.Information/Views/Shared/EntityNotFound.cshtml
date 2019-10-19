@@ -1,0 +1,19 @@
+﻿@using Iauq.Web.Mvc.UI
+@using Iauq.Information.App_GlobalResources
+@{
+    Layout = "~/Views/Shared/_NarrowLayout.cshtml";
+    ViewBag.Title = ValidationResources.EntityNotFound;
+    PagePartManager.Current.AddBreadcrumb(new MvcHtmlString(ValidationResources.EntityNotFound));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr/>
+        <p>@ValidationResources.EntityNotFound</p>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

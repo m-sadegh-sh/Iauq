@@ -1,0 +1,31 @@
+﻿@model Iauq.Core.Domain.Category
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(c => c.DisplayOrder, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextBoxFor(c => c.DisplayOrder, new { @class = "input-mini" })
+        @Html.ValidationMessageFor(c => c.DisplayOrder, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => c.Title, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextBoxFor(c => c.Title, new { @class = "input-xlarge" })
+        @Html.ValidationMessageFor(c => c.Title, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => c.LanguageId, new { @class = "control-label" })
+    <div class="controls">
+        @Html.DropDownListFor(c => c.LanguageId, (SelectList)ViewBag.Languages, new { @class = "input-large" })
+        @Html.ValidationMessageFor(c => c.LanguageId, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(c => c.ParentId, new { @class = "control-label" })
+    <div class="controls">
+        @Html.DropDownListFor(c => c.ParentId, (SelectList)ViewBag.Parents, "", new { @class = "input-large" })
+        @Html.ValidationMessageFor(c => c.ParentId, null, new { @class = "help-inline" })
+    </div>
+</div>

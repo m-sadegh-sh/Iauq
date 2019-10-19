@@ -1,0 +1,92 @@
+﻿@using Iauq.Core.Utilities
+@using Iauq.Information.Helpers
+@using StructureMap
+@functions
+{
+
+    public string Is(string expectedController)
+    {
+        return ViewContext.RouteData.GetRequiredString("Controller") == expectedController ? "active" : "";
+    }
+
+    public string Is(string expectedController, string expectedAction)
+    {
+        return (ViewContext.RouteData.GetRequiredString("Controller") == expectedController &&
+                ViewContext.RouteData.GetRequiredString("Action") == expectedAction) ? "active" : "";
+    }
+
+}
+
+@{
+    dynamic isSec = ViewBag.HasPrimary != null;
+
+    var webHelper = ObjectFactory.GetInstance<IWebHelper>();
+}
+
+<div class="well @(isSec ? "sec" : null) visual-links">
+    <h4 class="nav-title">
+        <i class="icon-globe"></i>بخش‌ها
+    </h4>
+    <div class="clearfix"></div>
+    <ul class="nav nav-list">
+        <li class="@Is("Administration", "Default")">@Html.ActionLink("پنل مدیریت", "Default", "Administration")</li>
+        <li class="@Is("Administration", "ChangePassword")">@Html.ActionLink("تغییر گذرواژه", "ChangePassword", "Administration")</li>
+        <li class="divider"></li>
+        @if (webHelper.IsInRoleWithRoles("Administrators"))
+        {
+            <li class="@Is("Languages")">@Html.ActionLink("زبانها", "List", "Languages", new {page = 1}, null)</li>
+            <li class="divider"></li>
+        }
+        @{
+            bool anyPermission = false;
+        }
+
+        @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators"))
+        {
+            anyPermission = true;
+            <li class="@Is("Categories")">@Html.ActionLink("گروهها", "List", "Categories", new {page = 1}, null)</li>
+        }
+        @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators", "Editors"))
+        {
+            anyPermission = true;
+            <li class="@Is("Contents")">@Html.ActionLink("محتوا", "List", "Contents", new {page = 1}, null)</li>
+            <li class="@Is("Comments")">@Html.ActionLink("نظرات", "List", "Comments", new {page = 1}, null)</li>
+            <li class="@Is("Files")">@Html.ActionLink("فایل‌ها", "List", "Files", new {page = 1}, null)</li>
+        }
+        @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators"))
+        {
+            anyPermission = true;
+            <li class="@Is("Carousels")">@Html.ActionLink("اسلایدها", "List", "Carousels", new {page = 1}, null)</li>
+        }
+        @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators", "Editors"))
+        {
+            anyPermission = true;
+            <li class="@Is("Polls")">@Html.ActionLink("نظرسنجی‌ها", "List", "Polls", new {page = 1}, null)</li>
+        }
+        @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators"))
+        {
+            anyPermission = true;
+            <li class="@Is("Templates")">@Html.ActionLink("الگو‌ها", "List", "Templates", new {page = 1}, null)</li>
+        }
+        @if (anyPermission)
+        {
+            <li class="divider"></li>
+        }
+        @if (webHelper.IsInRoleWithRoles("Administrators"))
+        {
+            <li class="@Is("Roles")">@Html.ActionLink("نقشها", "List", "Roles", new {page = 1}, null)</li>
+            <li class="@Is("Users")">@Html.ActionLink("کاربران", "List", "Users", new {page = 1}, null)</li>
+            <li class="divider"></li>
+        }
+        @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators"))
+        {
+            <li class="@Is("FileManager", "List")">@Html.ActionLink("مدیریت فایل‌ها", "List", "FileManager", new {currentUrl = Constants.CdnUrl}, null)</li>
+            <li class="divider"></li>
+        }
+        @if (webHelper.IsInRoleWithRoles("Administrators"))
+        {
+            <li class="@Is("Logs", "List")">@Html.ActionLink("سوابق", "List", "Logs", new {page = 1}, null)</li>
+        }
+    </ul>
+</div>
+<hr class="visible-small-phone"/>

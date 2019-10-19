@@ -1,0 +1,73 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Information.Models.Home.LoginModel
+@{
+    Layout = "~/Views/Shared/_NarrowLayout.cshtml";
+    ViewBag.Title = "ورود به حساب کاربری";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("ورود به حساب کاربری", "Login", "Home"));
+}
+<div class="rounded-box newest narrow">
+    <div class="inside">
+        <h1>
+            @ViewBag.Title
+        </h1>
+        <hr />
+        @using (Html.BeginForm("Login", "Home", FormMethod.Post, new {@class = "form-horizontal"}))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(l=>l.Done)
+            <input type="hidden" id="SecurityToken" name="SecurityToken" value="@Model.SecurityToken" />
+            <fieldset>
+                <div class="control-group">
+                    @Html.LabelFor(l => l.UserName, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.TextBoxFor(u => u.UserName, new {@class = "input-xlarge align-left", autocomplete = "off"})
+                        @Html.ValidationMessageFor(u => u.UserName, null, new {@class = "help-inline"})
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(l => l.Password, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.PasswordFor(u => u.Password, new {@class = "input-xlarge align-left"})
+                        @Html.ValidationMessageFor(u => u.Password, null, new {@class = "help-inline"})
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(l => l.Captcha, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.TextBoxFor(u => u.Captcha, new {@class = "input-mini align-left", autocomplete = "off"})
+                        <img alt="Captcha" src="@Url.RouteUrl("Captcha")" />
+                        @Html.ValidationMessageFor(u => u.Captcha, null, new {@class = "help-inline"})
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(l => l.RemmeberMe, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.CheckBoxFor(u => u.RemmeberMe, new {@class = "pull-right"})
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.Label("وضعیت قفل", new {@class = "control-label"})
+                    <div class="controls">
+                        <div id="lockStatus" class="pull-right"></div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="process" class="btn btn-success">
+                        ورود به سایت</button>
+                    @Html.ActionLink("برگشت به صفحه اصلی", "Default", "Home", null, new {@class = "btn"})
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            checkLock();
+        });
+    </script>
+}

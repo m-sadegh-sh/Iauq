@@ -1,0 +1,38 @@
+﻿@using Iauq.Information.Helpers
+@model Iauq.Web.Weather
+<div class="rounded-box links">
+    <div class="inside">
+        <h1>
+            آب و هوا
+        </h1>
+        <hr />
+        <ul class="the-icons unstyled">
+            <li>
+                <text>وضعیت هوا:</text>
+                @Model.Condition.GetPersianCode()
+            </li>
+            <li>
+                <text>سرعت باد :</text>
+                @Model.Wind.Speed.ToString() @Model.Units.GetSpeedUnitAbbreviation()
+            </li>
+            <li>
+                <text>دمای هوا:</text>
+                @Model.Condition.Temperature.ToString() @Model.Units.GetTemperatureUnitAbbreviation()
+            </li>
+            <li>
+                <text>رطوبت هوا:</text>
+                @Model.Atmosphere.Humidity
+                <text>%</text>
+            </li>
+            <li>
+                <text>فشار هوا:</text>
+                @Model.Atmosphere.Pressure.ToString() @Model.Units.GetPressureUnitAbbreviation()
+            </li>
+            <li>
+                @Html.Image(UrlResolver.Cdn("Images/Template/Weathers/" + @Model.Condition.Code + ".png"), "", new {id = "PicWeather", border = "0"}))
+            </li>
+        </ul>
+        <div class="clearfix">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+﻿@model Iauq.Information.Models.Calendars.CalendarModels
+@{ Html.RenderPartial("_Calendar", Model); }
+<div class="box-footer single">
+    @Html.RouteLink("مشاهده لیست کامل تقویم آموزشی", "Calendars", null, new { @class = "btn" })
+</div>

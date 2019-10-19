@@ -1,0 +1,73 @@
+﻿@using FarsiLibrary.Utils
+@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.Helpers
+@model List<Iauq.Core.Domain.Content>
+<div id="nav" class="hidden-small-phone">
+    <ul class="root">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            Content menu = Model[i];
+            <li>
+                <a href="@Url.PageUrl(menu)">
+                    <h3>@menu.Title.EnsureLength(40)</h3>
+                    @*<span class="hidden-tablet hidden-phone">@Html.Raw(menu.Abstract)</span>*@
+                </a>
+                <ul>
+                    <li>
+                        <div class="links"> 
+                            <div class="links-inner"> 
+                                <ul>
+                                    @foreach (Content submenu in menu.Childs.OrderBy(c => c.DisplayOrder))
+                                    {
+                                        <li>
+                                            @Html.PageLink(submenu)
+                                        </li>
+                                    }
+                                    <li class="clearfix"></li>
+                                    <span class="clearfix"></span>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="description">
+                            <div class="description-inner">
+                                <h3 class="topic-list">
+                                    @menu.Title
+                                </h3>
+                                @Html.Raw(menu.Body)
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        }
+        <li class="dif">
+            <a href="http://old.iauq.ac.ir/conference">
+                <h3>همایش ها</h3>
+            </a>
+        </li>
+        @if (Context.User.Identity.IsAuthenticated)
+        {
+            <li class="dif">
+                <a href="@Url.Action("Default", "Administration", new {Area = "Administration"})">
+                    <h3>مدیریت</h3>
+                </a>
+            </li>
+            <li class="dif">
+                <a href="@Url.Action("Logout", "Home")">
+                    <h3>خروج</h3>
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="dif">
+                <a href="@Url.Action("Login", "Home")">
+                    <h3>ورود</h3>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

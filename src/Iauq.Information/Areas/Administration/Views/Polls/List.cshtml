@@ -1,0 +1,106 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using MvcContrib.Pagination
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@model IEnumerable<Iauq.Core.Domain.Poll>
+
+@{
+    ViewBag.Title = "پنل مدیریت - نظرسنجی‌ها";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("نظرسنجی‌ها", "List", "Polls", new {page = 1}, null));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+            <div class="btn-group pull-left">
+                @Html.ActionLink("ثبت نظرسنجی جدید", "Create", null, new {@class = "btn btn-success"})
+            </div>
+        </h1>
+        <hr/>
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(p => p.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(p => p.IsActive)
+                    </th>
+                    <th>
+                        نتایج
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Poll poll in Model)
+                {
+                    <tr>
+                        <td>
+                            @poll.Title.EnsureLength(50)
+                        </td>
+                        <td>
+                            @(poll.IsActive ? "بله" : "خیر")
+                        </td>
+                        <td>
+                            <ul>
+                                @foreach (Choice choice in poll.Choices)
+                                {
+                                    <li>
+                                        <p>@choice.Title</p>
+                                        <ul>
+                                            @{
+                                                var sum = choice.Items.Sum(c => c.Answers.Count);
+                                                if (sum == 0)
+                                                {
+                                                    sum = 1;
+                                                }
+                                            }
+                                            @foreach(var choiceItem in choice.Items)
+                                            {
+                                                <li>
+                                                    <p>@choiceItem.Text: @choiceItem.Answers.Count رای (@((choiceItem.Answers.Count*100)/sum)%)</p>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("ویرایش", "Edit", new {poll.Id}, new {@class = "btn"})
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new {poll.Id}), new Dictionary<string, object> {{"class", "btn btn-danger"}, {"data-toggle", "modal"}, {"data-target", "#delete-modal"}, {"data-delete-handle", "true"}})
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.Partial("_DeleteConfirmationModal")
+            @Html.RenderPager(Model as IPagination, page => Url.Action("List", new {page}))
+        }
+        <div class="clearfix"></div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

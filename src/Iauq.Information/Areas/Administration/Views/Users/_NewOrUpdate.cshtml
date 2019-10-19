@@ -1,0 +1,50 @@
+﻿@using Iauq.Core.Domain
+@model Iauq.Core.Domain.User
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(u => u.UserName, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextBoxFor(u => u.UserName, new { @class = "input-xlarge align-left" })
+        @Html.ValidationMessageFor(u => u.UserName, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(u => u.Email, new { @class = "control-label" })
+    <div class="controls">
+        <div class="input-prepend">
+            @Html.TextBoxFor(u => u.Email, new { @class = "input-xlarge align-left" })
+            <span class="add-on">@@</span>
+        </div>
+        @Html.ValidationMessageFor(u => u.Email, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(u => u.Password, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextBoxFor(u => u.Password, new { @class = "input-xlarge align-left" })
+        @Html.ValidationMessageFor(u => u.Password, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(u => u.SecurityToken, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextBoxFor(u => u.SecurityToken, new { @class = "input-xlarge align-left" })
+        @Html.ValidationMessageFor(u => u.SecurityToken, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(u => u.Roles, new { @class = "control-label" })
+    <div class="controls">
+        @{
+            List<Role> roles = Model.Roles == null ? new List<Role>() : Model.Roles.ToList();
+        }
+        @foreach (Role role in (IEnumerable<Role>)ViewBag.Roles)
+        {
+            <label class="checkbox">
+                <input type='checkbox' name='roleIds' value='@role.Id' checked="@roles.Any(r => r.Id == role.Id)" />
+                @role.Name
+            </label>
+        }
+    </div>
+</div>

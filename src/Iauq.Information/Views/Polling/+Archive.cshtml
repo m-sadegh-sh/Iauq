@@ -1,0 +1,17 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Information.Models.Events.EventModels
+@{
+    ViewBag.Title = "آرشیو رخدادها";
+    if (!ViewContext.IsChildAction)
+    {
+        PagePartManager.Current.AddBreadcrumb(Html.ActionLink((string) ViewBag.Title, "Archive", "Events"));
+    }
+}
+<div class="rounded-box row-fluid">
+    <div class="inside">
+    <h1>@ViewBag.Title
+        </h1>
+        <hr>
+        @{ Html.RenderPartial("_Event", Model); }
+    </div>
+</div>

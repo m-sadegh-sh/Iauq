@@ -1,0 +1,30 @@
+﻿@model Iauq.Core.Domain.SeoMetadata
+<hr/>
+<div class="control-group">
+    @Html.LabelFor(sm => sm.SeoTitle, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(sm => sm.SeoTitle,new{@class="input-xlarge"})
+        @Html.ValidationMessageFor(sm => sm.SeoTitle, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(sm => sm.SeoSlug, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextBoxFor(sm => sm.SeoSlug,new{@class="input-xxlarge align-left"})
+        @Html.ValidationMessageFor(sm => sm.SeoSlug, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(sm => sm.SeoKeywords, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextAreaFor(sm => sm.SeoKeywords,5,100, new{@class="input-xlarge"})
+        @Html.ValidationMessageFor(sm => sm.SeoKeywords, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(sm => sm.SeoDescription, new {@class = "control-label"})
+    <div class="controls">
+        @Html.TextAreaFor(sm => sm.SeoDescription, 10, 50, new{@class="input-xxlarge"})
+        @Html.ValidationMessageFor(sm => sm.SeoDescription, null, new {@class = "help-inline"})
+    </div>
+</div>

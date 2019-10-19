@@ -1,0 +1,24 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Information.Models.Home.SearchModel
+@{
+    ViewBag.Title = "جستجو";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("جستجو", "Search", "Home"));
+}
+<div class="row-fluid">
+</div>
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>
+            @ViewBag.Title
+        </h1>
+        <hr />
+        @{Html.RenderPartial("_SearchForm", Model);}
+        <div class="clearfix"></div>
+    </div>
+</div>
+@if (Model.IsSearched)
+{
+<hr/>
+    Html.RenderPartial("_SearchResults", Model);
+}

@@ -1,0 +1,52 @@
+﻿@using Iauq.Data.Services
+@using StructureMap
+@functions
+{
+
+    public string Is(string expectedController, string expectedAction, int? parentId)
+    {
+        return
+            (ViewContext.RouteData.GetRequiredString("Controller") == expectedController &&
+             ViewContext.RouteData.GetRequiredString("Action") == expectedAction && Request["parentId"] == (parentId.HasValue ? parentId.Value.ToString() : "")) ? "active" : "";
+    }
+
+}
+
+@helper Recursive(Iauq.Core.Domain.File file)
+{
+    if (file.Childs.Count > 0)
+    {
+        <ul class="nav nav-list">
+            @foreach (Iauq.Core.Domain.File child in file.Childs.Where(f => f.IsDirectory))
+            {
+                <li class="@Is("Files", "List", child.Id)">
+                    @Html.ActionLink(child.Name, "List", "Files", new {parentId = child.Id}, null)
+                    @Recursive(child)
+                </li>
+            }
+        </ul>
+    }
+}
+
+<div class="well visual-links">
+    <h4 class="nav-title">
+        <i class="icon-folder-open"></i>مسیرهای موجود 
+    </h4>
+    <div class="clearfix"></div>
+    <ul class="nav nav-list">
+        <li class="@Is("Files", "List", null)">
+            @foreach (Iauq.Core.Domain.File file in ObjectFactory.GetInstance<IFileService>().GetAllFiles().ToList().Where(f => f.IsDirectory))
+            {
+                @Html.ActionLink(file.Name, "List", "Files", new {parentId = file.Id}, null)
+                @Recursive(file)
+            }
+        </li>
+    </ul>
+</div>
+<hr class="visible-small-phone"/>
+
+@{
+    ViewBag.HasPrimary = true;
+}
+
+@{ Html.RenderPartial("~/Areas/Administration/Views/Shared/_Well.cshtml"); }

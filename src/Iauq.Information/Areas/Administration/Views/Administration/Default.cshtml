@@ -1,0 +1,208 @@
+﻿@using Iauq.Core.Utilities
+@using StructureMap
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "پنل مدیریت";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink((string) ViewBag.Title, "Default", "Administration"));
+
+    var webHelper = ObjectFactory.GetInstance<IWebHelper>();
+}
+<div class="hero-unit hidden-small-phone hidden-small">
+    <h1>@ViewBag.Title</h1>
+</div>
+<div class="row-fluid">
+    <div class="span12 rounded-box newest admin-blocks">
+        <div class="inside">
+            <h1>بخش ها
+            </h1>
+            <hr />
+            <div class="span3">
+                <h3>
+                    <i class="icon-user"></i>تغییر گذرواژه
+                </h3>
+                <p class="hidden-small">
+                    در صورت لزوم می توانید گذرواژه خود را تغییر دهید.
+                </p>
+                <p class="pull-left">@Html.ActionLink("ورود", "ChangePassword", "Administration", null, new {@class = "btn"})</p>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+            <hr/>
+            @if (webHelper.IsInRoleWithRoles("Administrators"))
+            {
+                <div class="span3">
+                    <h3>
+                        <i class="icon-font"></i>زبانها
+                    </h3>
+                    <p class="hidden-small">
+                        لیست زبان‌های ثبت شده در سیستم.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Languages", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+                <hr/>
+            }
+            @{
+                bool anyPermission = false;
+            }
+
+            @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators"))
+            {
+                anyPermission = true;
+                <div class="span3">
+                    <h3>
+                        <i class="icon-tasks"></i>گروهها
+                    </h3>
+                    <p class="hidden-small">
+                        لیست گروه‌های ثبت شده در سیستم.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Categories", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+            }
+            @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators", "Editors"))
+            {
+                anyPermission = true;
+                <div class="span3">
+                    <h3>
+                        <i class="icon-pencil"></i>محتوا
+                    </h3>
+                    <p class="hidden-small">
+                        لیست محتوی‌های ثبت شده در سیستم.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Contents", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="span3">
+                    <h3>
+                        <i class="icon-envelope"></i>نظرات
+                    </h3>
+                    <p class="hidden-small">
+                        لیست نظرات ارسالی کاربران.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Comments", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="span3">
+                    <h3>
+                        <i class="icon-folder-open"></i>فایل‌ها
+                    </h3>
+                    <p class="hidden-small">
+                        مدیریت فایل‌های شما.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Files", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+            }
+            @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators"))
+            {
+                anyPermission = true;
+                <div class="span3">
+                    <h3>
+                        <i class="icon-eye-open"></i>اسلایدها
+                    </h3>
+                    <p class="hidden-small">
+                        لیست اسلاید‌های ثبت شده در سیستم (قابل نمایش در صفحه اصلی).
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Carousels", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+            }
+            @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators", "Editors"))
+            {
+                anyPermission = true;
+                <div class="span3">
+                    <h3>
+                        <i class="icon-check"></i>نظرسنجی‌ها
+                    </h3>
+                    <p class="hidden-small">
+                        لیست نظرسنجی‌های ثبت شده در سیستم.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Polls", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+            }
+            @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators"))
+            {
+                anyPermission = true;
+                <div class="span3">
+                    <h3>
+                        <i class="icon-edit"></i>الگو ‌ها
+                    </h3>
+                    <p class="hidden-small">
+                        لیست الگو‌های ثبت شده.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Templates", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+            }
+            @if (anyPermission)
+            {
+                <div class="clearfix"></div>
+                <hr/>
+            }
+            @if (webHelper.IsInRoleWithRoles("Administrators"))
+            {
+                <div class="span3">
+                    <h3>
+                        <i class="icon-asterisk"></i>نقشها
+                    </h3>
+                    <p class="hidden-small">
+                        لیست نقش‌های ثبت شده در سیستم.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Roles", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="span3">
+                    <h3>
+                        <i class="icon-user"></i>کاربران
+                    </h3>
+                    <p class="hidden-small">
+                        لیست کاربران ثبت شده در سیستم.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Users", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+                <hr/>
+            }
+            @if (webHelper.IsInRoleWithRoles("Administrators", "Moderators"))
+            {
+                <div class="span3">
+                    <h3>
+                        <i class="icon-folder-close"></i>مدیریت فایل‌ها
+                    </h3>
+                    <p class="hidden-small">
+                        مدیریت مسیر/فایل‌های موجود در سیستم.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "FileManager", new {currentUrl = Constants.CdnUrl}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+                <hr/>
+            }
+            @if (webHelper.IsInRoleWithRoles("Administrators"))
+            {
+                <div class="span3">
+                    <h3>
+                        <i class="icon-list-alt"></i>سوابق
+                    </h3>
+                    <p class="hidden-small">
+                        نمایش فعالیت‌های انجام‌شده توسط کاربران در سیستم.
+                    </p>
+                    <p class="pull-left">@Html.ActionLink("ورود", "List", "Logs", new {page = 1}, new {@class = "btn"})</p>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+                <hr/>
+            }
+            <div class="clearfix"></div>
+            <div class="box-footer single">
+                <a class="btn" href="/">برگشت به وب سایت اطلاع رسانی</a>
+            </div>
+        </div>
+    </div>
+</div>

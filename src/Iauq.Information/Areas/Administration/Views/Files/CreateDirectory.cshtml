@@ -1,0 +1,69 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Information.Areas.Administration.Models.Files.CreateDbDirectoryModel
+
+@{
+    ViewBag.Title = "پنل مدیریت - فایل‌ها - ایجاد مسیر جدید";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("فایل‌ها", "List", "FileManager", new {page = 1}, null));
+    
+    var parent = ViewBag.Parent as Iauq.Core.Domain.File;
+
+    Iauq.Core.Domain.File currentFile = parent;
+    var files = new List<MvcHtmlString>();
+
+    while (currentFile != null)
+    {
+        files.Add(@Html.ActionLink(currentFile.Name, "List", new { currentFile.Id, page = 1 }));
+
+        currentFile = currentFile.Parent;
+    }
+
+    files.Reverse();
+
+    foreach (MvcHtmlString file in files)
+    {
+        PagePartManager.Current.AddBreadcrumb(file);
+    }
+    
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("ایجاد مسیر جدید", "CreateDirectory", "Files", new {Model.ParentId}));
+}
+
+@Html.AntiForgeryToken()
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr />
+        @using (Html.BeginForm("CreateDirectory", "Files", new {Model.ParentId}, FormMethod.Post, new {@class = "form-horizontal"}))
+        {
+            @Html.ValidationSummary(true)
+            <fieldset>
+                <div class="control-group">
+                    @Html.LabelFor(cddm => cddm.Name, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.TextBoxFor(f => f.Name, new {@class = "input-large"})
+                        @Html.ValidationMessageFor(f => f.Name, null, new {@class = "help-inline"})
+                    </div>
+                </div>
+                <div class="control-group">
+                    @Html.LabelFor(cddm => cddm.AccessMode, new {@class = "control-label"})
+                    <div class="controls">
+                        @Html.DropDownListFor(cddm => cddm.AccessMode, (SelectList) ViewBag.AccessModes, new {@class = "input-large"})
+                        @Html.ValidationMessageFor(fum => fum.AccessMode, null, new {@class = "help-inline"})
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">ایجاد مسیر</button>
+                    @if (Model.ParentId.HasValue)
+                    {
+                        @Html.ActionLink("برگشت", "List", new { Model.ParentId,page=1}, new {@class = "btn"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink("برگشت", "List", new{page=1},new {@class = "btn"})
+                    }
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@model  MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+@if (!Model.Any())
+{
+    <p class="center">@ValidationResources.NoRecords</p>
+}
+else
+{
+    if (ViewContext.IsChildAction)
+    {
+        <text>
+            <marquee behavior="" direction="up" scrollamount="1" scrolldelay="30" onmouseover=" this.stop() "
+                     onmouseout=" this.start() " height="238">
+        </text>
+    }
+        <div class="rows-items">
+            @foreach (Content calendarModel in Model)
+            {
+                <div class="row-item">
+                    <h3>
+                        @Html.CalendarTitle(calendarModel)<br />
+                        <span>@(calendarModel.Category != null ? calendarModel.Category.Title + " /" : "") @calendarModel.PublishDate.ToPersianDate().ToWritten() / 
+                
+                            @if (string.IsNullOrWhiteSpace(calendarModel.Tags))
+                            {
+                                <text>این مطلب برچسبی ندارد!</text>
+                            }
+                            else
+                            {
+                                <b>برچسب ها:</b>
+                                @Html.RenderTags(calendarModel.Tags, "")
+                            }
+                            /
+                            @if (calendarModel.PageViews == 0)
+                            {
+                                <text>بدون بازدید!</text>
+                            }
+                            else
+                            {
+                                <b>تعداد بازدید:</b>
+                                @calendarModel.PageViews
+                            }
+                        </span>
+                    </h3>
+                </div>
+            }
+        </div>
+            if (ViewContext.IsChildAction)
+            {
+         @:</marquee>
+     }
+}

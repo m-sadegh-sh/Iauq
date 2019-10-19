@@ -1,0 +1,20 @@
+﻿@model Iauq.Core.Domain.ChoiceItem
+
+<div id="choice-item-@Model.Id">
+    @using (Ajax.BeginForm("EditChoiceItem", "Polls", new {Model.Id}, new AjaxOptions {UpdateTargetId = "choice-item-" + Model.Id, InsertionMode = InsertionMode.Replace, HttpMethod = "POST"}, new {@class = "form-horizontal"}))
+    {
+        <input type="hidden" name="id" value="@Model.Id" />
+        @Html.ValidationSummary(true)
+        <fieldset>
+            @{ Html.RenderPartial("_NewOrUpdateChoiceItem", Model); }
+            <div class="btn-group pull-right">
+                <button class="btn btn-small btn-success" type="submit">
+                    <i class="icon-ok icon-white"></i></button>
+           
+                <a class="btn btn-danger btn-small" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#choice-item-@Model.Id"
+                   href="@Url.Action("DeleteChoiceItem", "Polls", new {Model.Id})"><i class="icon-remove icon-white"></i></a>
+            </div>
+            <div class="clearfix"></div>
+        </fieldset>
+    }
+</div>

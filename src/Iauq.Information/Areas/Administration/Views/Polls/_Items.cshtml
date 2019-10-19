@@ -1,0 +1,7 @@
+﻿@using Iauq.Core.Domain
+@model ICollection<Iauq.Core.Domain.ChoiceItem>
+
+@foreach (ChoiceItem choiceItem in Model)
+{
+    @Html.Partial("_EditChoiceItem", choiceItem)
+}

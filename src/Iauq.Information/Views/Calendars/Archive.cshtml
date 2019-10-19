@@ -1,0 +1,22 @@
+﻿@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@using MvcContrib.Pagination
+@model MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+@{
+    Layout = "~/Views/Shared/_LayoutWithSideBar.cshtml";
+    ViewBag.Title = "خانه - آرشیو تقویم آموزشی";
+    ViewBag.Keywords = "آرشیو، تقویم آموزشی، تقویم آموزشی دانشگاه";
+    ViewBag.Description = "آرشیو تقویم آموزشی دانشگاه آزاد اسلامی، واحد قوچان";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("خانه", "Default", "Home"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("آرشیو تقویم آموزشی", "Archive", "Calendars", new { page = 1 }, null));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside text">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr>
+        @{ Html.RenderPartial("_Calendar", Model); }
+        @Html.RenderPager(Model as IPagination, page => Url.Action("Archive", new { page }))
+    </div>
+</div>

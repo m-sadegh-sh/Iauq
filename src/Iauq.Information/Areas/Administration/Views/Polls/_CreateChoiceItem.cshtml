@@ -1,0 +1,22 @@
+﻿@model Iauq.Core.Domain.ChoiceItem
+
+@{
+    var renderWrapper = ViewData["IgnoreWrapper"] == null;
+}
+
+<div id="choice-item-@Model.Id">
+    @using (Ajax.BeginForm("CreateChoiceItem", "Polls", new {choiceId = Model.OwnerId}, new AjaxOptions {UpdateTargetId = "choice-item-" + Model.Id, InsertionMode = InsertionMode.Replace, HttpMethod = "POST"}, new {@class = "form-horizontal"}))
+    {
+        @Html.ValidationSummary(true)
+        <fieldset>
+            @{ Html.RenderPartial("_NewOrUpdateChoiceItem", Model); }
+            <div class="btn-group pull-right">
+                <button class="btn btn-small btn-success" type="submit">
+                    <i class="icon-ok icon-white"></i>
+                </button>
+            </div>
+            <div class="clearfix">
+            </div>
+        </fieldset>
+    }
+</div>

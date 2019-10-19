@@ -1,0 +1,25 @@
+﻿@model Iauq.Core.Domain.Template
+
+@Html.AntiForgeryToken()
+<div class="control-group">
+    @Html.LabelFor(t => t.Title, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextBoxFor(t => t.Title, new { @class = "input-xlarge" })
+        @Html.ValidationMessageFor(t => t.Title, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(t => t.Description, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextBoxFor(t => t.Description, new { @class = "input-xlarge" })
+        @Html.ValidationMessageFor(t => t.Description, null, new { @class = "help-inline" })
+    </div>
+</div>
+<div class="control-group">
+    @Html.LabelFor(t => t.Body, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextAreaFor(t => t.Body, 20, 50, new { @class = "input-xxlarge ckeditor" })
+        @Html.ValidationMessageFor(t => t.Body, null, new { @class = "help-inline" })
+    </div>
+</div>
+

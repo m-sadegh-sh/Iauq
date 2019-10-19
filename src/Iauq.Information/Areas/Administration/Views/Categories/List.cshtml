@@ -1,0 +1,104 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Information.Helpers
+@using MvcContrib.Pagination
+@using Iauq.Web.Mvc.UI
+@model IEnumerable<Iauq.Core.Domain.Category>
+@{
+    ViewBag.Title = "پنل مدیریت - دستهبندیها";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("دستهبندیها", "List", "Categories", new { page = 1 }, null));
+}
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+            <div class="btn-group pull-left">
+                @Html.ActionLink("ثبت دسته بندی جدید", "Create", null, new { @class = "btn btn-success" })
+            </div>
+        </h1>
+        <hr />
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.DisplayOrder)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.ParentId)
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Category category in Model)
+                {
+                    <tr>
+                        <td>
+                            @category.Title.EnsureLength(40)
+                        </td>
+                        <td>
+                            @category.DisplayOrder
+                        </td>
+                        <td>
+                            @helper ShowSubItems(Category category, bool setSeparator)
+                            {
+                                if (category.Parent != null)
+                                {
+                                    @ShowSubItems(category.Parent, true)
+                                }
+
+                                @Html.ActionLink(category.Title.EnsureLength(30), "Edit", new {category.Id})
+
+                                if (setSeparator)
+                                {
+                                    <text>/</text>
+                                }
+                            }
+                            @if (category.Parent != null)
+                            {
+                                @ShowSubItems(category.Parent, false)
+                            }
+                            else
+                            {
+                                <div>ندارد</div>
+                            }
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("ویرایش", "Edit", new {category.Id}, new {@class = "btn"})
+                             @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new { category.Id }), new Dictionary<string, object> { { "class", "btn btn-danger" }, { "data-toggle", "modal" }, { "data-target", "#delete-modal" }, { "data-delete-handle", "true" } })
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.Partial("_DeleteConfirmationModal")
+            @Html.RenderPager(Model as IPagination, page => Url.Action("List", new { page }))
+        }
+        <div class="clearfix">
+        </div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new { @class = "btn" })
+        </div>
+    </div>
+</div>

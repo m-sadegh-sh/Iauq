@@ -1,0 +1,19 @@
+﻿@using Iauq.Web.Mvc.UI
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title>@PagePartManager.Current.RenderTitle(null)</title>
+        <meta name="keywords" content="@ViewBag.Keywords"/>
+        <meta name="description" content="@ViewBag.Description"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        @{ Html.RenderAction("Styles", "Layout", new {Area = ""}); }
+    </head>
+    <body>
+        <div class="fluid-container">
+            @{ Html.RenderAction("TopBar", "Layout", new {Area = ""}); }
+            @RenderBody()
+        </div>
+        @{ Html.RenderAction("Scripts", "Layout", new {Area = ""}); }
+        @RenderSection("Scripts", false)
+    </body>
+</html>

@@ -1,0 +1,5 @@
+﻿@model  MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Content>
+@{ Html.RenderPartial("_Event", Model); }
+<div class="box-footer single">
+    @Html.RouteLink("آرشیو رخدادها", "Events", new{page=1}, new {@class = "btn"})
+</div>

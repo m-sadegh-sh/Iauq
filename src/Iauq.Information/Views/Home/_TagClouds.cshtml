@@ -1,0 +1,29 @@
+﻿@using Iauq.Core.Extensions
+@using Iauq.Information.Models.Home
+@model Iauq.Information.Models.Home.TagCloudsModel
+<div class="well tags hidden-small-phone">
+    <h4 class="nav-title">
+        <i class="icon-tags"></i>برچسبها
+    </h4>
+    <div class="clearfix"></div>
+    <ul class="nav nav-list">
+        <li class="btn-toolbar poll-item tags-container" id="tag-clouds">
+            @if (Model.Any())
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    TagCloudModel tagCloudModel = Model[i];
+                    <div class="btn-group tag@(i >= 5 ? Html.Raw(" hide") : null)">
+                        @Html.ActionLink(tagCloudModel.Tag.EnsureLength(20), "Search", "Home", new {tagCloudModel.Tag, page = 1}, new {@class = "btn btn-mini"})
+                        <button class="btn btn-mini disabled">
+                            x @tagCloudModel.Count
+                        </button>
+                    </div>
+                }
+            }
+        </li>
+        <div class="clearfix">
+        </div>
+    </ul>
+    <a class="more" clip-id="tag-clouds" trap="true"><i class="icon-circle-arrow-down"></i></a>
+</div>

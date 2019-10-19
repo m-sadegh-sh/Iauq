@@ -1,0 +1,171 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.Helpers
+@model Iauq.Core.Domain.Content
+@{
+    var type = (ContentType)ViewBag.Type;
+}
+
+@Html.AntiForgeryToken()
+@if (type == ContentType.News)
+{
+    <div class="control-group">
+        @Html.LabelFor(c => c.IsHot, new { @class = "control-label" })
+        <div class="controls">
+            @Html.CheckBoxFor(c => c.IsHot, new { @class = "input-xlarge" })
+            @Html.ValidationMessageFor(c => c.IsHot, null, new { @class = "help-inline" })
+        </div>
+    </div>
+}
+@if (type == ContentType.Pages)
+{
+    <div class="control-group">
+        @Html.LabelFor(c => c.ShowNestedContents, new { @class = "control-label" })
+        <div class="controls">
+            @Html.CheckBoxFor(c => c.ShowNestedContents, new { @class = "input-xlarge" })
+            @Html.ValidationMessageFor(c => c.ShowNestedContents, null, new { @class = "help-inline" })
+        </div>
+    </div>
+}
+@if (type == ContentType.Pages || type == ContentType.Menu || type == ContentType.Links)
+{
+    <div class="control-group">
+        @Html.LabelFor(c => c.DisplayOrder, new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextBoxFor(c => c.DisplayOrder, new { @class = "input-mini" })
+            @Html.ValidationMessageFor(c => c.DisplayOrder, null, new { @class = "help-inline" })
+        </div>
+    </div>
+}
+<div class="control-group">
+    @Html.LabelFor(c => c.Title, new { @class = "control-label" })
+    <div class="controls">
+        @Html.TextBoxFor(c => c.Title, new { @class = "input-xlarge" })
+        @Html.ValidationMessageFor(c => c.Title, null, new { @class = "help-inline" })
+    </div>
+</div>
+@if (type == ContentType.Pages || type == ContentType.Menu || type == ContentType.News)
+{
+    <div class="control-group">
+        @Html.LabelFor(c => c.Abstract, new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextAreaFor(c => c.Abstract, 5, 50, new { @class = "input-xxlarge ckeditor" })
+            @Html.ValidationMessageFor(c => c.Abstract, null, new { @class = "help-inline" })
+        </div>
+    </div>
+}
+@if (type != ContentType.Links)
+{
+    <div class="control-group">
+        @Html.LabelFor(c => c.Body, new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextAreaFor(c => c.Body, 20, 50, new { @class = "input-xxlarge ckeditor" })
+            @Html.ValidationMessageFor(c => c.Body, null, new { @class = "help-inline" })
+        </div>
+    </div>
+}
+else
+{
+    <div class="control-group">
+        <label class="control-label" for="Body">آدرس</label>
+        <div class="controls">
+            @Html.TextBoxFor(c => c.Body, new { @class = "input-xxlarge align-left" })
+            @Html.ValidationMessageFor(c => c.Body, null, new { @class = "help-inline" })
+        </div>
+    </div>
+}
+@if (type == ContentType.Pages || type == ContentType.News || type == ContentType.Events)
+{
+    <div class="control-group">
+        @Html.LabelFor(c => c.Tags, new { @class = "control-label" })
+        <div class="controls">
+            @Html.TextAreaFor(c => c.Tags, 2, 50, new { @class = "input-xxlarge" })
+            @Html.ValidationMessageFor(c => c.Tags, null, new { @class = "help-inline" })
+        </div>
+    </div>
+}
+@if (type == ContentType.News || type == ContentType.Pages)
+{
+    @Html.EditorFor(c => c.Metadata)
+}
+<div class="control-group">
+    @Html.LabelFor(c => c.CategoryId, new { @class = "control-label" })
+    <div class="controls">
+        @*@Html.DropDownListFor(c => c.CategoryId, (SelectList) ViewBag.Categories, new {@class = "input-large"})*@
+        <select class="input-large" data-val="true" id="CategoryId" name="CategoryId">
+            @if ((bool)ViewBag.UserIsUnlimited)
+            {
+                <option value="">هچکدام</option>
+            }
+            @foreach (Category category in (List<Category>)ViewBag.Categories)
+            {
+                <option @(category.Id == Model.CategoryId ? "selected=\"selected\"" : "") value="@category.Id">@ShowSubItems(category, false)</option>
+            }
+            @helper ShowSubItems(Category category, bool setSeparator)
+            {
+                if (category.Parent != null)
+                {
+                    @ShowSubItems(category.Parent, true)
+                }
+
+                @category.Title.EnsureLength(20)
+
+                if (setSeparator)
+                {
+                    <text>/</text>
+                }
+            }
+        </select>
+        @Html.ValidationMessageFor(c => c.CategoryId, null, new { @class = "help-inline" })
+    </div>
+</div>
+@if (type == ContentType.Pages || type == ContentType.Links)
+{
+    <div class="control-group">
+        @Html.LabelFor(c => c.ParentId, new { @class = "control-label" })
+        <div class="controls">
+            @*@Html.DropDownListFor(c => c.ParentId, (SelectList) ViewBag.Parents, "", new {@class = "input-large"})*@
+            <select class="input-xxlarge" data-val="true" id="ParentId" name="ParentId">
+                <option value="">هچکدام</option>
+                
+                @{
+    IEnumerable<Content> rootParents = ((List<Content>)ViewBag.Parents).Where(c => c.Parent == null);
+                }
+                
+                @foreach (Content content in rootParents)
+                {
+                    @Render(content)
+                }
+
+                @helper Render(Content content)
+                    {
+                    <option @(content.Id == Model.ParentId ? "selected=\"selected\"" : "") value="@content.Id">@ShowSubItems(content, false)</option>
+
+                    foreach (Content child in content.Childs)
+                    {
+                        @Render(child)
+                    }
+                }
+
+                @helper ShowSubItems(Content content, bool setSeparator)
+                    {
+                        if (content.Parent != null)
+                        {
+                        @ShowSubItems(content.Parent, true)
+                        }
+
+                    @content.Title.EnsureLength(20)
+
+                        if (setSeparator)
+                        {
+                        <text>/</text>
+                    }
+                }
+            </select>
+            @Html.ValidationMessageFor(c => c.ParentId, null, new { @class = "help-inline" })
+        </div>
+    </div>
+}
+@Html.Partial("_TemplatesModal")
+
+<script src="@UrlResolver.Script("ckeditor")"> </script>

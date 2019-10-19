@@ -1,0 +1,49 @@
+﻿@using Iauq.Core.Domain
+@model Iauq.Core.Domain.Poll
+@using (Ajax.BeginForm("Vote", "Home", null, new AjaxOptions {UpdateTargetId = "poll", InsertionMode = InsertionMode.Replace, HttpMethod = "POST"}, new {id = "choice", @class = "form-horizontal"}))
+{
+    <li class="btn-toolbar tags-container">
+        <h3>@Model.Title</h3>
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            @Html.Raw(Model.Description)
+        }
+    </li>
+    foreach (Choice choice in Model.Choices)
+    {
+        if (Model.Choices.Count > 1)
+        {
+            <h2>@choice.Title</h2>
+            if (!string.IsNullOrEmpty(choice.Description))
+            {
+                <p>
+                @choice.Description
+            </p>
+            }
+        }
+        foreach (ChoiceItem item in choice.Items)
+        {
+            <li class="btn-toolbar tags-container poll-item">
+                @if (choice.IsMultiSelection)
+                {
+                    <label class="checkbox">
+                        <input type="checkbox" name="choiceItemIds" value="@item.Id" />
+                        @item.Text
+                    </label>
+                }
+                else
+                {
+                    <label class="radio">
+                        <input type="radio" name="choiceItemIds" value="@item.Id" />
+                        @item.Text
+                    </label>
+                }
+            </li>
+        }
+    }
+    <li class="btn-toolbar poll-buttons">
+        <button type="submit" class="btn btn-success">ارسال</button>
+        @Ajax.RouteLink("نتایج", "PollResults", null, new AjaxOptions {HttpMethod = "GET", UpdateTargetId = "poll", InsertionMode = InsertionMode.Replace}, new Dictionary<string, object> {{"class", "btn btn-info"}})
+        @Html.ActionLink("آرشیو", "Archive", "Polling", new {page = 1}, new {@class = "btn"})
+    </li>
+}

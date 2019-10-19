@@ -1,0 +1,18 @@
+﻿@model Iauq.Core.Domain.Choice
+<div id="choice-@Model.Id">
+    <hr/>
+    @using (Ajax.BeginForm("EditChoice", "Polls", new {Model.Id}, new AjaxOptions {UpdateTargetId = "choice-" + Model.Id, InsertionMode = InsertionMode.Replace, HttpMethod = "POST"}, new {id = "choice-" + Model.Id, @class = "form-horizontal"}))
+    {
+        <input type="hidden" name="id" value="@Model.Id" />
+        @Html.ValidationSummary(true)
+        <fieldset>
+            @{ Html.RenderPartial("_NewOrUpdateChoice", Model); }
+            <div class="form-actions">
+                @Ajax.ActionLink("گزینه جدید", "CreateChoiceItem", "Polls", new {choiceId = Model.Id}, new AjaxOptions {HttpMethod = "GET", UpdateTargetId = "items-" + Model.Id, InsertionMode = InsertionMode.InsertAfter}, new {@class = "btn btn-info"})
+                <button class="btn btn-success" type="submit">
+                    بروز رسانی</button>
+                @Ajax.ActionLink("حذف", "DeleteChoice", "Polls", new RouteValueDictionary {{"Id", Model.Id}}, new AjaxOptions {HttpMethod = "GET", UpdateTargetId = "choice-" + Model.Id, InsertionMode = InsertionMode.Replace}, new Dictionary<string, object> {{"class", "btn btn-danger"}})
+            </div>
+        </fieldset>
+    }
+</div>

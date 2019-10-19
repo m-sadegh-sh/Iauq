@@ -1,0 +1,32 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Information.Helpers
+@using Iauq.Information.App_GlobalResources
+@model  MvcContrib.Pagination.IPagination<Iauq.Core.Domain.Poll>
+@if (!Model.Any())
+{
+    <p class="center">@ValidationResources.NoRecords</p>
+}
+else
+{
+    foreach (Poll poll in Model)
+    {
+        <div>
+            <h3>
+                @Html.PollTitle(poll)<br />
+                <span>
+                    <b>تعداد آرا:</b>
+                    @{ int sum = poll.Choices.Sum(c => c.Items.Sum(i => i.Answers.Count)); }
+                    @(sum == 0 ? " بدون نظر" : " " + sum + " رای")
+                </span>
+            </h3>
+            @if (!string.IsNullOrEmpty(poll.Description))
+            {
+                <p class="text">
+                    @Html.Raw(poll.Description)
+                </p>
+            }
+            <div class="clearfix">
+            </div>
+        </div>
+    }
+}

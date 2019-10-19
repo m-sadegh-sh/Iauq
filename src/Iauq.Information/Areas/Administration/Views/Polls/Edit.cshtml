@@ -1,0 +1,34 @@
+﻿@using Iauq.Web.Mvc.UI
+@model Iauq.Core.Domain.Poll
+
+@{
+    ViewBag.Title = string.Format("پنل مدیریت - نظرسنجی‌ها - ویرایش نظرسنجی: {0}", Model.Title);
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("نظرسنجی‌ها", "List", "Polls", new {page = 1}, null));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink(string.Format("ویرایش نظرسنجی: {0}", Model.Title), "Edit", "Polls", new {Model.Id}));
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <hr />
+        <div id="poll">
+            @using (Ajax.BeginForm("Edit", "Polls", new {Model.Id}, new AjaxOptions {HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "poll"}, new {@class = "form-horizontal"}))
+            {
+                <input type="hidden" name="id" value="@Model.Id" />
+                @Html.ValidationSummary(true)
+                <fieldset>
+                    @{ Html.RenderPartial("_NewOrUpdate", Model); }
+                    <div class="form-actions">
+                        @Ajax.ActionLink("انتخاب جدید", "CreateChoice", "Polls", new {pollId = Model.Id}, new AjaxOptions {HttpMethod = "GET", UpdateTargetId = "choices", InsertionMode = InsertionMode.InsertBefore}, new {@class = "btn btn-info"})
+                        <button type="submit" class="btn btn-success">بروز رسانی</button>
+                        @Html.ActionLink("برگشت", "List", new {page = 1}, new {@class = "btn"})
+                    </div>
+                </fieldset>
+            }
+            @{ Html.RenderPartial("_Choices", model: Model.Choices); }
+            @Html.Partial("_DeleteConfirmationModal")
+        </div>
+    </div>
+</div>

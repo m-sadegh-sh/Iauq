@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="row-fluid">
+    <div class="span3">
+        @{ Html.RenderPartial("_Well"); }
+    </div>
+    <div class="span9">
+        @RenderBody()
+    </div>
+</div>

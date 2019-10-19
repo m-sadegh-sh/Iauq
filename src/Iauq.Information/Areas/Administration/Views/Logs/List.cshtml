@@ -1,0 +1,103 @@
+﻿@using Iauq.Core.Domain
+@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@using MvcContrib.Pagination
+@using Iauq.Information.Helpers
+@using Iauq.Web.Mvc.UI
+@model IEnumerable<Iauq.Core.Domain.Log>
+
+@{
+    ViewBag.Title = "پنل مدیریت - سوابق";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("سوابق", "List", "Logs", new {page = 1}, null));
+
+    dynamic hasLevel = ViewBag.LogLevel != null;
+    LogLevel level = LogLevel.Exception;
+    if (hasLevel)
+    {
+        level = (LogLevel) ViewBag.LogLevel;
+    }
+}
+
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <div class="btn-toolbar ignore-heading pull-left">  
+            <div class="btn-group">
+                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">فیلتر بر اساس@(hasLevel ? " [" + level.ToLocalizedString() + "] " : "")... <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>@Html.RouteLink("همه", "AdministrationList", new {Controller = "Logs", page = 1})</li>
+                    <li>@Html.ActionLink("اطلاعات اشتباه", "List", new {logLevel = "wrong-credentials", page = 1})</li>
+                    <li>@Html.ActionLink("ورود", "List", new {logLevel = "login", page = 1})</li>
+                    <li>@Html.ActionLink("تغییر پسورد", "List", new {logLevel = "change-password", page = 1})</li>
+                    <li>@Html.ActionLink("خروج", "List", new {logLevel = "logout", page = 1})</li>
+                    <li>@Html.ActionLink("ثبت", "List", new {logLevel = "create", page = 1})</li>
+                    <li>@Html.ActionLink("بروزرسانی", "List", new {logLevel = "update", page = 1})</li>
+                    <li>@Html.ActionLink("حذف", "List", new {logLevel = "delete", page = 1})</li>
+                    <li>@Html.ActionLink("استثنا", "List", new {logLevel = "exception", page = 1})</li>
+                </ul>
+            </div>
+        </div>
+        <hr/>
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    @if (!hasLevel)
+                    {
+                        <th>
+                            @Html.DisplayNameFor(l => l.Level)
+                        </th>
+                    }
+                    <th>
+                        @Html.DisplayNameFor(l => l.LogDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(l => l.Message)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(l => l.IpAddress)
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Log log in Model)
+                {
+                    <tr class="@log.Level.ToString().SpliteUppercase()">
+                        @if (!hasLevel)
+                        {
+                            <th>
+                                @log.Level.ToLocalizedString()
+                            </th>
+                        }
+                        <td>
+                            @log.LogDate.ToPersianDate()
+                        </td>
+                        <td>
+                            @log.Message.EnsureLength(200)
+                        </td>
+                        <td>
+                            @log.IpAddress
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("نمایش", "Details", new {log.Id}, new {@class = "btn"})
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new {log.Id}), new Dictionary<string, object> {{"class", "btn btn-danger"}, {"data-toggle", "modal"}, {"data-target", "#delete-modal"}, {"data-delete-handle", "true"}})
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.Partial("_DeleteConfirmationModal")
+            @Html.RenderPager(Model as IPagination, page => Url.Action("List", new {page}))
+        }
+        <div class="clearfix"></div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿@model Iauq.Core.Domain.Comment
+
+<div class="control-group">
+    <div class="controls">
+        @Html.TextBoxFor(c => c.Title, new {width = "50%", placeholder = Html.DisplayNameFor(c => c.Title)})
+        @Html.ValidationMessageFor(c => c.Title, null, new {@class = "help-inline"})
+    </div>
+</div>
+<div class="control-group">
+    <div class="controls">
+        @Html.TextAreaFor(c => c.Body, 10, 40, new {style = "width:95%", placeholder = Html.DisplayNameFor(c => c.Body)})
+        @Html.ValidationMessageFor(c => c.Body, null, new {@class = "help-inline"})
+    </div>
+</div>

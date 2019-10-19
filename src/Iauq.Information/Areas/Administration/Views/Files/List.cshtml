@@ -1,0 +1,184 @@
+﻿@using Iauq.Core.Extensions
+@using Iauq.Information.App_GlobalResources
+@using Iauq.Information.Helpers
+@using MvcContrib.Pagination
+@using Iauq.Web.Mvc.UI
+@model IEnumerable<Iauq.Core.Domain.File>
+@{
+    ViewBag.Title = "پنل مدیریت - فایل‌ها";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("پنل مدیریت", "Default", "Administration"));
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink("فایل‌ها", "List", "Files", new {page = 1}, null));
+
+    var parent = ViewBag.Parent as Iauq.Core.Domain.File;
+
+    Iauq.Core.Domain.File currentFile = parent;
+    var files = new List<MvcHtmlString>();
+
+    while (currentFile != null)
+    {
+        files.Add(@Html.ActionLink(currentFile.Name, "List", new {currentFile.Id, page = 1}));
+
+        currentFile = currentFile.Parent;
+    }
+
+    files.Reverse();
+
+    foreach (MvcHtmlString file in files)
+    {
+        PagePartManager.Current.AddBreadcrumb(file);
+    }
+
+    //dynamic hasType = ViewBag.FileType != null;
+    //FileType type = FileType.News;
+    int recordPerPage = ViewBag.RecordPerPage ?? Constants.RecordPerPage;
+    //if (hasType)
+    //{
+    //    type = (FileType) ViewBag.FileType;
+    //}
+}
+<div class="rounded-box newest row-fluid">
+    <div class="inside">
+        <h1>@ViewBag.Title
+        </h1>
+        <div class="btn-toolbar ignore-heading pull-left">
+            @if (parent != null)
+            {
+                <div class="btn-group">
+                    @Html.ActionLink("ویرایش", "Edit", new {parent.Id}, new {@class = "btn"})
+                    @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new {parent.Id}), new Dictionary<string, object> {{"class", "btn btn-danger"}, {"data-toggle", "modal"}, {"data-target", "#delete-modal"}, {"data-delete-handle", "true"}})
+                    @Html.ActionLink("برگشت", "List", new {parentId = parent.ParentId}, new {@class = "btn"})
+                </div>
+            }
+            <div class="btn-group">
+                <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">@(" [" + recordPerPage + "] ")... <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>@Html.ActionLink("10", "List", new {Controller = "Files", page = ((IPagination) Model).PageNumber, recordPerPage = 10})</li>
+                    <li>@Html.ActionLink("50", "List", new {Controller = "Files", page = ((IPagination) Model).PageNumber, recordPerPage = 50})</li>
+                    <li>@Html.ActionLink("100", "List", new {Controller = "Files", page = ((IPagination) Model).PageNumber, recordPerPage = 100})</li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">... <span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>@Html.ActionLink("ایجاد پوشه", "CreateDirectory", "Files", parent != null ? new {parentId = parent.Id} : null, null)</li>
+                    <li>@Html.ActionLink("ارسال فایل", "UploadFile", "Files", parent != null ? new {parentId = parent.Id} : null, null)</li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+        @{
+            var error = TempData["Error"] as string;
+
+            bool hasError = error != null;
+        }
+        @if (hasError)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    <li>@error</li>
+                </ul>
+            </div>
+        }
+        @if (!Model.Any())
+        {
+            <p class="center">@ValidationResources.NoRecords</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.ContentType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.Size)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.AccessMode)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.CreateDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.AccessCount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.UploaderId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(c => c.ParentId)
+                    </th>
+                    <th>
+                        عملیات
+                    </th>
+                </tr>
+                @foreach (Iauq.Core.Domain.File file in Model.OrderByDescending(f => f.IsDirectory).ThenBy(f => f.Name))
+                {
+                    <tr>
+                        <td>
+                            @if (file.IsFile)
+                            {
+                                @Html.RouteLink(file.Name.EnsureLength(40), "Download", new {file.Guid, fn = file.Name}, null)
+                            }
+                            else
+                            {
+                                @Html.ActionLink(file.Name.EnsureLength(40), "List", new {parentId = file.Id})
+                            }
+                        </td>
+                        <td>
+                            @if (file.IsFile)
+                            {
+                                @file.ContentType.EnsureLength(40)
+                            }
+                            else
+                            {
+                                <text>---</text>
+                            }
+                        </td>
+                        <td>
+                            @file.GetFullSize().ToFileSize()
+                        </td>
+                        <td>
+                            @file.AccessMode.ToLocalizedString()
+                        </td>
+                        <td>
+                            @file.CreateDate.ToPersianDate()
+                        </td>
+                        <td>
+                            @if (file.IsFile)
+                            {
+                                @file.AccessCount
+                                <text>بار</text>
+                            }
+                            else
+                            {
+                                <text>---</text>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink(file.Uploader.UserName.EnsureLength(40), "Edit", "Users", new {file.Uploader.Id}, null)
+                        </td>
+                        <td>
+                            @(file.ParentId.HasValue ? file.Parent.Name.EnsureLength(40) : "ندارد")
+                        </td>
+                        <td class="btn-group">
+                            @Html.ActionLink("ویرایش", "Edit", new {file.Id}, new {@class = "btn"})
+                            @Html.ActionLink("حذف", "Delete", new RouteValueDictionary(new {file.Id}), new Dictionary<string, object> {{"class", "btn btn-danger"}, {"data-toggle", "modal"}, {"data-target", "#delete-modal"}, {"data-delete-handle", "true"}})
+                            @Html.ActionLink(file.IsPublished ? "عدم انتشار" : "انتشار", "ChangePublication", new {file.Id}, new {@class = "btn"})
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.RenderPager(Model as IPagination, page => Url.Action("List", new {parentId = parent != null ? (int?) parent.Id : null, page, recordPerPage}))
+        }
+        @Html.Partial("_DeleteConfirmationModal")
+        <div class="clearfix">
+        </div>
+        <div class="box-footer single">
+            @Html.ActionLink("برگشت به پنل مدیریت", "Default", "Administration", null, new {@class = "btn"})
+        </div>
+    </div>
+</div>

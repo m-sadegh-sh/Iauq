@@ -1,0 +1,114 @@
+﻿@using Iauq.Web.Mvc.UI
+@{
+    ViewBag.Title = "خانه";
+    ViewBag.Keywords = "خانه، صفحه اصلی، ";
+    ViewBag.Description = "خانه";
+    PagePartManager.Current.AddBreadcrumb(Html.ActionLink((string)ViewBag.Title, "Default", "Home"));
+}
+@{ Html.RenderAction("Carousels", "Home"); }
+<hr class="hidden-small-phone" />
+<div class="row-fluid contents" style="background: #63799F; background: rgba(0, 38, 100, 0.4);
+    border-radius: 5px; padding: 4px 0 0 3px;">
+    <div class="span12">
+        <div class="highlights row-fluid">
+            <div class="tabbable">
+                <div class="tabs-right pull-right span10" style="width: 88.9%;">
+                    <ul class="nav nav-tabs right">
+                        <li class="active first-child"><a href="#news" data-toggle="tab">
+                            <h1>
+                                اخبار</h1>
+                        </a></li>
+                        <li><a href="#events" data-toggle="tab">
+                            <h1>
+                                رخدادهاي پيشرو</h1>
+                        </a></li>
+                        <li><a href="#calendars" data-toggle="tab">
+                            <h1>
+                                تقویم آموزشی</h1>
+                        </a></li>
+                        <li><a href="#poll" data-toggle="tab">
+                            <h1>
+                                نظرسنجی</h1>
+                        </a></li>
+                        <li><a href="#internal-links" data-toggle="tab">
+                            <h1>
+                                لینک‌های مفید</h1>
+                        </a></li>
+                        <li><a href="#external-links" data-toggle="tab">
+                            <h1>
+                                سایر لینک‌ها</h1>
+                        </a></li>
+                    </ul>
+                    <div class="rounded-box">
+                        <div class="inside text tab-content">
+                            <div class="tab-pane active" id="news">
+                                @{ Html.RenderAction("Archive", "News"); }
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="events">
+                                @{ Html.RenderAction("Archive", "Events"); }
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="calendars">
+                                @Html.Action("Archive", "Calendars")
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="poll">
+                                @{ Html.RenderAction("Poll"); }
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="internal-links">
+                                @{ Html.RenderAction("InternalLinks"); }
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="external-links">
+                                @{ Html.RenderAction("ExternalLinks"); }
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tabs-left pull-left span2" style="width: 11.1%; margin-right: 0;">
+                    <ul class="nav nav-tabs left">
+                        <li class="first-child"><a href="http://www.iauquchan.com/login.aspx" target="_black">
+                            <h1>
+                                پرتال دانشجويان</h1>
+                        </a></li>
+                        <li><a href="http://www.iauq.ac.ir:8000/" target="_black">
+                            <h1>
+                                انتخاب واحد</h1>
+                        </a></li>
+                        <li><a href="http://ea.iauq.ac.ir/Modules/ProfessorPortal.aspx" target="_black">
+                            <h1>
+                                پرتال اساتيد</h1>
+                        </a></li>
+                        <li><a href="http://ea.iauq.ac.ir/Modules/E_employeePortal.aspx" target="_black">
+                            <h1>
+                                پرتال کارکنان</h1>
+                        </a></li>
+                        <li><a href="http://mail.iauq.ac.ir/" target="_black">
+                            <h1>
+                                ایمیل دانشگاه</h1>
+                        </a></li>
+                        <li><a href="http://srd.iauq.ac.ir/" target="_black">
+                            <h1>
+                                صندوق رفاه
+                            </h1>
+                        </a></li>
+                        <li><a href="http://payment.iauq.ac.ir/" target="_black">
+                            <h1>
+                                شهریه
+                            </h1>
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
